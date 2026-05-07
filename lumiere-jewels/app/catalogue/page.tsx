@@ -44,7 +44,7 @@ export default function CataloguePage() {
       }}>
         <Link href="/" style={{ textDecoration: 'none', fontSize: '20px', color: '#2f2723' }}>←</Link>
         <span style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '18px', fontWeight: 600, letterSpacing: '3px', color: '#2f2723' }}>
-          lumière
+          LILOOK
         </span>
         <div style={{ width: '24px' }} />
       </nav>

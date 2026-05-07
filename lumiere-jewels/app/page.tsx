@@ -49,7 +49,7 @@ export default function HomePage() {
         borderBottom: '1px solid rgba(255,255,255,0.3)',
       }}>
         <span style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '22px', fontWeight: 600, letterSpacing: '3px', color: '#2f2723' }}>
-          lumière
+          LILOOK
         </span>
         <Link href="/admin" style={{ textDecoration: 'none' }}>
           <div style={{

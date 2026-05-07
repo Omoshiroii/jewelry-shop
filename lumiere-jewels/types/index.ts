@@ -1,4 +1,4 @@
-export type Category = 'bagues' | 'colliers' | 'bracelets' | 'boucles' | 'traditionnel'
+export type Category = 'bagues' | 'colliers' | 'bracelets' | 'boucles' | 'traditionnel' | 'pendentifs' | 'ensembles' | 'autres'
 
 export type Product = {
   id: string

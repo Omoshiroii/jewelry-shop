@@ -27,8 +27,8 @@ export default function AdminLogin() {
     <main style={{ minHeight: '100vh', background: '#fdf5f5', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
       <div style={{ width: '100%', maxWidth: '400px' }}>
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '36px', fontWeight: 300, letterSpacing: '4px', color: '#1a1a1a' }}>lumière</h1>
-          <p style={{ fontSize: '10px', letterSpacing: '3px', color: '#C4787C', textTransform: 'uppercase', marginTop: '8px' }}>espace propriétaire</p>
+          <h1 style={{  fontFamily: 'Cormorant Garamond, serif', fontSize: '36px', fontWeight: 500, letterSpacing: '4px', color: '#2f2723'}}>LILOOK</h1>
+          <p style={{ fontSize: '10px', letterSpacing: '2px', color: '#c8a27b', textTransform: 'uppercase', marginTop: '6px' }}>Don't look back</p>
         </div>
         <div style={{ background: 'white', borderRadius: '16px', padding: '24px', border: '1px solid #f0e8e8' }}>
           <div style={{ marginBottom: '16px' }}>
@@ -55,7 +55,16 @@ export default function AdminLogin() {
           <button
             onClick={handleLogin}
             disabled={loading}
-            style={{ width: '100%', background: '#C4787C', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontSize: '14px', letterSpacing: '1px', cursor: 'pointer', opacity: loading ? 0.6 : 1 }}
+            style={{
+              width: '100%', padding: '14px 28px',
+              border: 'none',
+              background: 'linear-gradient(135deg, #2f2723, #1a120e)',
+              color: 'white',
+              borderRadius: '999px',
+              fontWeight: 600, fontSize: '13px',
+              cursor: 'pointer', letterSpacing: '1px',
+              opacity: loading ? 0.6 : 1
+            }}
           >
             {loading ? 'Connexion...' : 'Se connecter'}
           </button>
