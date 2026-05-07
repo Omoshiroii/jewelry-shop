@@ -1,23 +1,73 @@
 'use client'
+import { useState } from 'react'
 import Link from 'next/link'
-import { Search, Heart } from 'lucide-react'
+import { Menu, Search, Heart } from 'lucide-react'
+import MenuDrawer from './MenuDrawer'
+import SearchBar from './SearchBar'
+import { useFavorites } from '@/hooks/useFavorites'
 
 export default function Navbar() {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const { favoriteCount } = useFavorites()
+
   return (
-<nav className="sticky top-0 z-50 bg-white border-b border-rose-light px-6 py-3 flex items-center justify-between max-w-7xl mx-auto w-full">      
-      <Link href="/">
-        <span className="font-cormorant text-2xl font-light tracking-[4px] text-ink">
-          LILOOK
-        </span>
-      </Link>
-      <div className="flex items-center gap-4">
-        <button aria-label="Rechercher">
-          <Search size={18} strokeWidth={1.5} className="text-ink" />
-        </button>
-        <button aria-label="Favoris">
-          <Heart size={18} strokeWidth={1.5} className="text-ink" />
-        </button>
-      </div>
-    </nav>
+    <>
+      <nav
+        className="fixed top-0 left-0 w-full z-50 px-5 py-4 flex items-center justify-between"
+        style={{
+          background: 'rgba(247, 242, 236, 0.75)',
+          backdropFilter: 'blur(24px)',
+          WebkitBackdropFilter: 'blur(24px)',
+          borderBottom: '1px solid rgba(200, 162, 123, 0.08)',
+        }}
+      >
+        {/* Left: Hamburger + Search */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setMenuOpen(true)}
+            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/50 transition-colors duration-300"
+            aria-label="Menu"
+          >
+            <Menu size={20} strokeWidth={1.5} className="text-[#2f2723]" />
+          </button>
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/50 transition-colors duration-300"
+            aria-label="Rechercher"
+          >
+            <Search size={18} strokeWidth={1.5} className="text-[#2f2723]" />
+          </button>
+        </div>
+
+        {/* Center: Brand */}
+        <Link href="/" className="absolute left-1/2 -translate-x-1/2">
+          <span
+            className="font-cormorant text-[22px] font-semibold tracking-[4px] text-[#2f2723]"
+            style={{ fontFamily: "'Cormorant Garamond', serif" }}
+          >
+            LILOOK
+          </span>
+        </Link>
+
+        {/* Right: Favorites */}
+        <Link
+          href="/favoris"
+          className="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/50 transition-colors duration-300"
+          aria-label="Favoris"
+        >
+          <Heart size={18} strokeWidth={1.5} className="text-[#2f2723]" />
+          {favoriteCount > 0 && (
+            <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#c8a27b] text-white text-[9px] font-medium rounded-full flex items-center justify-center">
+              {favoriteCount}
+            </span>
+          )}
+        </Link>
+      </nav>
+
+      {/* Overlays */}
+      <MenuDrawer isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
+      <SearchBar isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+    </>
   )
 }

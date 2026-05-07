@@ -4,6 +4,8 @@ import { useParams, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import { Product } from '@/types'
 import { formatPrice, getSalePrice, hasDiscount } from '@/lib/utils'
+import { useFavorites } from '@/hooks/useFavorites'
+import { ArrowLeft, Heart, Share2 } from 'lucide-react'
 
 export default function ProductPage() {
   const { id } = useParams()
@@ -11,6 +13,7 @@ export default function ProductPage() {
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeImg, setActiveImg] = useState(0)
+  const { isFavorite, toggleFavorite } = useFavorites()
 
   useEffect(() => {
     async function fetch() {
@@ -23,151 +26,152 @@ export default function ProductPage() {
   }, [id])
 
   if (loading) return (
-    <div style={{ minHeight: '100vh', background: '#f7f2ec', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{ width: '24px', height: '24px', borderRadius: '50%', border: '2px solid #c8a27b', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }} />
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    <div className="min-h-screen bg-[#f7f2ec] flex items-center justify-center">
+      <div className="w-6 h-6 border-2 border-[#c8a27b] border-t-transparent rounded-full animate-spin" />
     </div>
   )
 
   if (!product) return (
-    <div style={{ minHeight: '100vh', background: '#f7f2ec', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <p style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '24px', color: '#c8a27b' }}>Produit introuvable</p>
+    <div className="min-h-screen bg-[#f7f2ec] flex items-center justify-center">
+      <p className="font-cormorant text-2xl text-[#c8a27b]">Produit introuvable</p>
     </div>
   )
 
   const discounted = hasDiscount(product.discount_percentage)
   const salePrice = getSalePrice(product.original_price, product.discount_percentage)
+  const favorited = isFavorite(product.id)
 
   return (
-    <div style={{ background: '#f7f2ec', minHeight: '100vh', fontFamily: 'Inter, sans-serif' }}>
+    <div className="min-h-screen bg-[#f7f2ec] font-inter" style={{ fontFamily: "'Inter', sans-serif" }}>
+      <div className="h-16" />
 
-      {/* NAV */}
-      <nav style={{
-        position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 100,
-        padding: '18px 24px',
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        background: 'rgba(247,242,236,0.8)',
-        backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(200,162,123,0.1)',
-      }}>
-        <button onClick={() => router.back()} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', color: '#2f2723' }}>
-          ←
+      {/* Navigation Bar for Product Page */}
+      <div className="fixed top-16 left-0 w-full z-40 px-5 py-3 flex items-center justify-between">
+        <button
+          onClick={() => router.back()}
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-white/70 backdrop-blur-sm hover:bg-white transition-colors"
+        >
+          <ArrowLeft size={18} strokeWidth={1.5} className="text-[#2f2723]" />
         </button>
-        <span style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '18px', fontWeight: 600, letterSpacing: '3px', color: '#2f2723' }}>
-          LILOOK
-        </span>
-        <div style={{ width: '24px' }} />
-      </nav>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => toggleFavorite(product.id)}
+            className={`w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-sm transition-all duration-300 ${
+              favorited ? 'bg-[#c8a27b]/20' : 'bg-white/70 hover:bg-white'
+            }`}
+          >
+            <Heart
+              size={18}
+              strokeWidth={1.5}
+              className={favorited ? 'text-[#c8a27b] fill-[#c8a27b]' : 'text-[#2f2723]'}
+            />
+          </button>
+          <button className="w-10 h-10 flex items-center justify-center rounded-full bg-white/70 backdrop-blur-sm hover:bg-white transition-colors">
+            <Share2 size={18} strokeWidth={1.5} className="text-[#2f2723]" />
+          </button>
+        </div>
+      </div>
 
-      {/* MAIN IMAGE */}
-      <div style={{ paddingTop: '70px' }}>
-        <div style={{ width: '100%', aspectRatio: '1', overflow: 'hidden', background: '#efe3d7', position: 'relative' }}>
+      {/* Main Image */}
+      <div className="pt-4">
+        <div className="w-full aspect-square overflow-hidden bg-[#efe3d7] relative">
           {product.images?.[activeImg] ? (
             <img
               src={product.images[activeImg]}
               alt={product.title}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              className="w-full h-full object-cover"
             />
           ) : (
-            <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #efe3d7, #e8d5c4)' }} />
+            <div className="w-full h-full bg-gradient-to-br from-[#efe3d7] to-[#e8d5c4]" />
           )}
           {product.is_trending && (
-            <div style={{
-              position: 'absolute', top: '16px', left: '16px',
-              background: 'rgba(47,39,35,0.85)', backdropFilter: 'blur(8px)',
-              color: 'white', fontSize: '9px', letterSpacing: '2px',
-              padding: '6px 14px', borderRadius: '999px', textTransform: 'uppercase'
-            }}>Tendance</div>
+            <div className="absolute top-4 left-4 bg-[#2f2723]/85 backdrop-blur-sm text-white text-[9px] tracking-[2px] px-4 py-2 rounded-full uppercase">
+              Tendance
+            </div>
           )}
           {discounted && (
-            <div style={{
-              position: 'absolute', top: '16px', right: '16px',
-              background: '#c8a27b', color: 'white', fontSize: '11px',
-              padding: '6px 14px', borderRadius: '999px'
-            }}>-{product.discount_percentage}%</div>
+            <div className="absolute top-4 right-4 bg-[#c8a27b] text-white text-[11px] px-4 py-2 rounded-full">
+              -{product.discount_percentage}%
+            </div>
           )}
         </div>
 
-        {/* THUMBNAIL ROW */}
+        {/* Thumbnail Row */}
         {product.images?.length > 1 && (
-          <div style={{ display: 'flex', gap: '8px', padding: '12px 20px', overflowX: 'auto', scrollbarWidth: 'none' }}>
+          <div className="flex gap-2 px-5 py-3 overflow-x-auto scrollbar-hide">
             {product.images.map((img, i) => (
-              <div
+              <button
                 key={i}
                 onClick={() => setActiveImg(i)}
-                style={{
-                  width: '64px', height: '64px', flexShrink: 0,
-                  borderRadius: '14px', overflow: 'hidden', cursor: 'pointer',
-                  border: i === activeImg ? '2px solid #c8a27b' : '2px solid transparent',
-                  opacity: i === activeImg ? 1 : 0.6
-                }}
+                className={`w-16 h-16 flex-shrink-0 rounded-[14px] overflow-hidden transition-all duration-300 ${
+                  i === activeImg ? 'ring-2 ring-[#c8a27b] opacity-100' : 'opacity-60 hover:opacity-80'
+                }`}
               >
-                <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              </div>
+                <img src={img} alt="" className="w-full h-full object-cover" />
+              </button>
             ))}
           </div>
         )}
 
-        {/* INFO */}
-        <div style={{ padding: '24px 24px 140px' }}>
-          <p style={{ fontSize: '10px', color: '#c8a27b', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '8px' }}>
+        {/* Info */}
+        <div className="px-6 pt-4 pb-36">
+          <p className="text-[10px] text-[#c8a27b] tracking-[3px] uppercase mb-2">
             {product.category}
           </p>
-          <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '2.4rem', fontWeight: 500, color: '#2f2723', lineHeight: 1.1, marginBottom: '16px' }}>
+          <h1
+            className="font-cormorant text-[2.4rem] font-medium text-[#2f2723] leading-tight mb-4"
+            style={{ fontFamily: "'Cormorant Garamond', serif" }}
+          >
             {product.title}
           </h1>
 
-          {/* PRICE */}
-          <div style={{ marginBottom: '20px' }}>
+          {/* Price */}
+          <div className="mb-5">
             {discounted ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '2rem', color: '#c8a27b', fontWeight: 500 }}>
+              <div className="flex items-center gap-3">
+                <span className="font-cormorant text-[2rem] text-[#c8a27b] font-medium" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                   {formatPrice(salePrice)}
                 </span>
-                <span style={{ fontSize: '14px', color: '#bbb', textDecoration: 'line-through' }}>
+                <span className="text-[14px] text-[#bbb] line-through">
                   {formatPrice(product.original_price)}
                 </span>
               </div>
             ) : (
-              <span style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '2rem', color: '#2f2723', fontWeight: 500 }}>
+              <span className="font-cormorant text-[2rem] text-[#2f2723] font-medium" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 {formatPrice(product.original_price)}
               </span>
             )}
           </div>
 
-          {/* DESCRIPTION */}
+          {/* Description */}
           {product.description && (
-            <div style={{ background: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(12px)', borderRadius: '20px', padding: '20px', marginBottom: '24px' }}>
-              <p style={{ fontSize: '14px', lineHeight: 1.9, color: '#8e7f74' }}>
+            <div className="bg-white/60 backdrop-blur-sm rounded-[20px] p-5 mb-6">
+              <p className="text-[14px] leading-[1.9] text-[#8e7f74]">
                 {product.description}
               </p>
             </div>
           )}
 
-          {/* QUOTE */}
-          <p style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.1rem', fontStyle: 'italic', color: '#c8a27b', textAlign: 'center', margin: '32px 0', lineHeight: 1.6 }}>
+          {/* Quote */}
+          <p className="font-cormorant text-[1.1rem] italic text-[#c8a27b] text-center my-8 leading-relaxed" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             "Le luxe devrait se sentir doux, pas fort."
           </p>
         </div>
       </div>
 
-      {/* BOTTOM CTA */}
-      <div style={{
-        position: 'fixed', bottom: 0, left: 0, width: '100%',
-        padding: '16px 24px 32px',
-        background: 'rgba(247,242,236,0.9)',
-        backdropFilter: 'blur(20px)',
-        borderTop: '1px solid rgba(200,162,123,0.1)'
-      }}>
-        
-          <a href="https://wa.me/212600000000" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', display: 'block' }}>
-          <button style={{ width: '100%', padding: '16px', background: 'linear-gradient(135deg, #2f2723, #1e1815)', color: 'white', border: 'none', borderRadius: '999px', fontSize: '14px', letterSpacing: '1px', cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
+      {/* Bottom CTA */}
+      <div className="fixed bottom-0 left-0 w-full px-6 py-4 pb-8 bg-[#f7f2ec]/90 backdrop-blur-xl border-t border-[rgba(200,162,123,0.1)] z-40">
+        <a
+          href={`https://wa.me/212600000000?text=Bonjour! Je suis intéressé(e) par: ${encodeURIComponent(product.title)} (${encodeURIComponent(formatPrice(discounted ? salePrice : product.original_price))})`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block"
+        >
+          <button className="w-full py-4 bg-gradient-to-r from-[#2f2723] to-[#1e1815] text-white rounded-full text-[14px] tracking-[1px] font-medium hover:shadow-lg hover:shadow-[#2f2723]/20 transition-all duration-300 active:scale-[0.98]">
             Commander via WhatsApp ↗
           </button>
         </a>
       </div>
-
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   )
 }

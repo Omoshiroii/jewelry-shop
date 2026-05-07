@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Home, Grid2X2, Heart, Phone } from 'lucide-react'
+import { useFavorites } from '@/hooks/useFavorites'
 
 const links = [
   { href: '/', label: 'Accueil', icon: Home },
@@ -12,26 +13,34 @@ const links = [
 
 export default function BottomNav() {
   const pathname = usePathname()
+  const { favoriteCount } = useFavorites()
 
   return (
-<nav className="fixed bottom-0 left-0 w-full z-50 bg-white border-t border-rose-light md:hidden">      
-      <div className="flex justify-around items-center py-2 pb-safe">
+    <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[92%] max-w-[400px] z-50 bg-white/70 backdrop-blur-xl rounded-full shadow-[0_10px_40px_rgba(0,0,0,0.08)] border border-white/50 md:hidden py-2.5 px-2">
+      <div className="flex justify-around items-center">
         {links.map(({ href, label, icon: Icon }) => {
           const active = pathname === href
           return (
             <Link
               key={href}
               href={href}
-              className="flex flex-col items-center gap-1 px-4 py-1"
+              className="relative flex flex-col items-center gap-0.5 px-4 py-1"
             >
-              <Icon
-                size={20}
-                strokeWidth={1.5}
-                className={active ? 'text-rose-dusty' : 'text-gray-400'}
-              />
+              <div className="relative">
+                <Icon
+                  size={20}
+                  strokeWidth={1.5}
+                  className={active ? 'text-[#c8a27b]' : 'text-[#8e7f74]'}
+                />
+                {href === '/favoris' && favoriteCount > 0 && (
+                  <span className="absolute -top-1.5 -right-2 w-4 h-4 bg-[#c8a27b] text-white text-[8px] font-medium rounded-full flex items-center justify-center">
+                    {favoriteCount}
+                  </span>
+                )}
+              </div>
               <span
                 className={`text-[9px] tracking-wide uppercase font-inter ${
-                  active ? 'text-rose-dusty' : 'text-gray-400'
+                  active ? 'text-[#c8a27b]' : 'text-[#8e7f74]'
                 }`}
               >
                 {label}

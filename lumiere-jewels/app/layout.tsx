@@ -1,10 +1,25 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import Navbar from '@/components/Navbar'
+import BottomNav from '@/components/BottomNav'
 
 export const metadata: Metadata = {
-  title: 'LILOOK — Bijoux d\'Exception',
-  description: 'Découvrez notre collection de bijoux artisanaux marocains.',
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
+  title: `LILOOK — Bijoux d'Exception`,
+  description: 'Découvrez notre collection de bijoux artisanaux marocains. Pièces féminines inspirées de la chaleur marocaine.',
+  keywords: ['bijoux', 'maroc', 'artisanal', 'bagues', 'colliers', 'bracelets', 'or', 'argent'],
+  authors: [{ name: 'LILOOK' }],
+  openGraph: {
+    title: `LILOOK — Bijoux d'Exception`,
+    description: 'Découvrez notre collection de bijoux artisanaux marocains.',
+    type: 'website',
+  },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  themeColor: '#f7f2ec',
 }
 
 export default function RootLayout({
@@ -14,7 +29,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
-      <body>{children}</body>
+      <body className="bg-[#f7f2ec] antialiased">
+        <Navbar />
+        <main>{children}</main>
+        <BottomNav />
+      </body>
     </html>
   )
 }
