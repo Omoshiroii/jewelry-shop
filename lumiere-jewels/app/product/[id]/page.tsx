@@ -167,9 +167,6 @@ export default function ProductPage() {
           rel="noopener noreferrer"
           className="block"
         >
-          <button className="w-full py-4 bg-gradient-to-r from-[#2f2723] to-[#1e1815] text-white rounded-full text-[14px] tracking-[1px] font-medium hover:shadow-lg hover:shadow-[#2f2723]/20 transition-all duration-300 active:scale-[0.98]">
-            Commander via WhatsApp ↗
-          </button>
         </a>
       </div>
     </div>

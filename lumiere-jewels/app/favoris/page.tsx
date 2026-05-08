@@ -17,6 +17,7 @@ export default function FavoritesPage() {
     if (favorites.length > 0) {
       fetchFavoriteProducts()
     } else {
+      setProducts([])
       setLoading(false)
     }
   }, [favorites])
@@ -24,13 +25,21 @@ export default function FavoritesPage() {
   async function fetchFavoriteProducts() {
     setLoading(true)
     const supabase = createClient()
-    const { data } = await supabase
+
+    // Fetch all favorite products
+    const { data, error } = await supabase
       .from('products')
       .select('*')
       .in('id', favorites)
 
+    if (error) {
+      console.error('Error fetching favorites:', error)
+      setLoading(false)
+      return
+    }
+
     if (data) {
-      // Maintain order based on favorites array
+      // Maintain the order based on favorites array (newest first)
       const ordered = favorites
         .map(id => data.find(p => p.id === id))
         .filter((p): p is Product => p !== undefined)

@@ -4,11 +4,12 @@ import { usePathname } from 'next/navigation'
 import { Home, Grid2X2, Heart, Phone } from 'lucide-react'
 import { useFavorites } from '@/hooks/useFavorites'
 
+const WHATSAPP_NUMBER = '212600000000'
+
 const links = [
   { href: '/', label: 'Accueil', icon: Home },
   { href: '/catalogue', label: 'Catalogue', icon: Grid2X2 },
   { href: '/favoris', label: 'Favoris', icon: Heart },
-  { href: '/contact', label: 'Contact', icon: Phone },
 ]
 
 export default function BottomNav() {
@@ -48,6 +49,23 @@ export default function BottomNav() {
             </Link>
           )
         })}
+
+        {/* WhatsApp Contact Button */}
+        <a
+          href={`https://wa.me/${WHATSAPP_NUMBER}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="relative flex flex-col items-center gap-0.5 px-4 py-1"
+        >
+          <Phone
+            size={20}
+            strokeWidth={1.5}
+            className="text-[#8e7f74]"
+          />
+          <span className="text-[9px] tracking-wide uppercase font-inter text-[#8e7f74]">
+            Contact
+          </span>
+        </a>
       </div>
     </nav>
   )

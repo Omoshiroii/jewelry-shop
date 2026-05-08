@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { X, ChevronRight } from 'lucide-react'
+import { X, ChevronRight, Phone } from 'lucide-react'
 
 const menuCategories = [
   { value: 'tout', label: 'Tout' },
@@ -21,6 +21,8 @@ const menuSections = [
   { label: 'PROMOTIONS', href: '/catalogue?filter=promotions', hasArrow: true },
 ]
 
+const WHATSAPP_NUMBER = '212600000000'
+
 interface MenuDrawerProps {
   isOpen: boolean
   onClose: () => void
@@ -39,15 +41,15 @@ export default function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
         onClick={onClose}
       />
 
-      {/* Drawer Panel */}
+      {/* Drawer Panel — FROM LEFT */}
       <div
-        className={`fixed top-0 right-0 h-full w-full max-w-[380px] bg-[#faf8f5] z-[999] shadow-2xl transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed top-0 left-0 h-full w-full max-w-[380px] bg-[#faf8f5] z-[999] shadow-2xl transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         style={{ willChange: 'transform' }}
       >
         {/* Close Button */}
-        <div className="flex justify-end p-6 pb-2">
+        <div className="flex justify-start p-6 pb-2">
           <button
             onClick={onClose}
             className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#f0ebe5] transition-colors duration-300"
@@ -139,13 +141,18 @@ export default function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
               >
                 <span className="font-inter text-[12px] tracking-[1.5px]">Mes Favoris</span>
               </Link>
-              <Link
-                href="/contact"
+
+              {/* WhatsApp Contact */}
+              <a
+                href={`https://wa.me/${WHATSAPP_NUMBER}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={onClose}
                 className="flex items-center gap-3 text-[#5a4f47] hover:text-[#c8a27b] transition-colors duration-300"
               >
+                <Phone size={14} strokeWidth={1.5} />
                 <span className="font-inter text-[12px] tracking-[1.5px]">Nous Contacter</span>
-              </Link>
+              </a>
             </div>
 
             {/* Admin Access */}
