@@ -61,7 +61,7 @@ export default function HomePage() {
         <div>
           {/* Tag */}
           <div className="inline-block px-4 py-2 bg-white/50 rounded-full backdrop-blur-md text-[10px] tracking-[2px] text-[#8e7f74] mb-7">
-            BIJOUX ARTISANAUX MAROCAINS
+            BIJOUX ARTISANAUX MAROCAINS EN ACIER INOXYDABLE
           </div>
 
           {/* Headline */}
@@ -105,7 +105,7 @@ export default function HomePage() {
 
           {/* Floating Card */}
           <div className="absolute left-3 bottom-3 px-4 py-3 bg-white/70 backdrop-blur-md rounded-[20px] z-20 shadow-[0_8px_32px_rgba(0,0,0,0.06)]">
-            <p className="text-[11px] font-medium text-[#2f2723]">✦ Fait à la main au Maroc</p>
+            <p className="text-[11px] font-medium text-[#2f2723]">✦ Don't look back ✦</p>
             <p className="text-[10px] text-[#8e7f74] mt-1">luxe doux & intemporel</p>
           </div>
         </div>
