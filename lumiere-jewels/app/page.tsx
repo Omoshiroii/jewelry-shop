@@ -8,7 +8,7 @@ import Footer from '@/components/Footer'
 import { MapPin, Navigation } from 'lucide-react'
 
 const WHATSAPP_NUMBER = '212600000000'
-const STORE_ADDRESS = 'Stand Lilook Bijoux - Socco Alto Mall en face de Paul, Tanger, Maroc'
+const STORE_ADDRESS = 'Socco Alto Mall en face de Paul, Tanger, Maroc'
 const MAP_EMBED_URL = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2958.6087065500765!2d-5.840486100000001!3d35.7810626!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd0c789bd618661d%3A0x87aff69d2a2c175f!2sSocco%20Alto!5e1!3m2!1sen!2sma!4v1778262462501!5m2!1sen!2sma" 
 
 export default function HomePage() {
@@ -230,7 +230,7 @@ Résistants, chics, et facile à entretenir
             className="font-cormorant text-[2.4rem] font-medium leading-none text-[#2f2723]"
             style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
-            Venez nous<br />rendre visite
+            <br />
           </h2>
         </div>
 
@@ -243,7 +243,9 @@ Résistants, chics, et facile à entretenir
             <div>
               <p className="text-[14px] font-medium text-[#2f2723] mb-1">LILOOK Boutique</p>
               <p className="text-[13px] text-[#8e7f74] leading-relaxed">
-                {STORE_ADDRESS}
+                {STORE_ADDRESS} <br />
+                <i>Ouvert tous les jours de 10h à 21h</i>
+
               </p>
             </div>
           </div>
