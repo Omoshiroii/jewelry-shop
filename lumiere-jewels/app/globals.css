@@ -1,17 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Inter:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --color-rose-dusty: #C4787C;
-  --color-rose-light: #f0e8e8;
-  --color-rose-pale: #fdf5f5;
-  --color-ink: #1a1a1a;
+  --color-cream: #EAE0CC;
+  --color-dusty-rose: #C9ADA1;
+  --color-sage: #A0A083;
+  --color-slate: #4D6A6D;
+  --color-burgundy: #88292F;
+  --color-terracotta: #A77464;
+  --color-mauve: #A27E8E;
+  --color-dark-brown: #2E1E0F;
+  --color-soft-pink: #FCB9B2;
+  --color-peach: #FED0BB;
+  --color-cranberry: #8C2F39;
+  --color-gold: #c8a27b;
+  --color-beige: #f7f2ec;
+  --color-ink: #2f2723;
 
   --font-cormorant: 'Cormorant Garamond', serif;
   --font-inter: 'Inter', sans-serif;
-
-  --radius-card: 18px;
-  --radius-pill: 999px;
 }
 
 * {
@@ -21,7 +28,7 @@
 html {
   font-family: 'Inter', sans-serif;
   background: #f7f2ec;
-  color: #2f2723;
+  color: #2e1e0f;
   scroll-behavior: smooth;
 }
 
@@ -33,19 +40,35 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Hide scrollbar utility */
+/* ============================================
+   SCROLLBAR & UTILITIES
+   ============================================ */
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Scroll snap */
 .scroll-snap-x { scroll-snap-type: x mandatory; }
 .scroll-snap-start { scroll-snap-align: start; }
 
-/* Custom animations */
+/* ============================================
+   MARQUEE ANIMATION (CSS-only, GPU accelerated)
+   ============================================ */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+  will-change: transform;
+}
+
+/* ============================================
+   FADE IN UP (for hero text stagger)
+   ============================================ */
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -53,43 +76,78 @@ body {
   }
 }
 
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+/* ============================================
+   FADE IN (general purpose)
+   ============================================ */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-@keyframes slideInRight {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-.animate-fade-in-up {
-  animation: fadeInUp 0.6s ease-out forwards;
-}
-
 .animate-fade-in {
-  animation: fadeIn 0.4s ease-out forwards;
+  animation: fadeIn 0.5s ease-out forwards;
 }
 
-/* Smooth image loading */
+/* ============================================
+   FLOATING ANIMATION (subtle movement)
+   ============================================ */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* ============================================
+   SHIMMER (loading state)
+   ============================================ */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, #efe3d7 25%, #f7f2ec 50%, #efe3d7 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ============================================
+   PULSE GLOW (for accents)
+   ============================================ */
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(200, 162, 123, 0.4); }
+  50% { box-shadow: 0 0 20px 5px rgba(200, 162, 123, 0.2); }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+/* ============================================
+   SMOOTH IMAGE LOADING
+   ============================================ */
 img {
-  transition: opacity 0.3s ease;
+  transition: opacity 0.4s ease, transform 0.7s ease;
 }
 
-img[src] {
-  opacity: 1;
-}
-
-/* Button press effect */
+/* ============================================
+   BUTTON PRESS EFFECT
+   ============================================ */
 button:active {
   transform: scale(0.97);
 }
 
-/* Link hover underline animation */
+/* ============================================
+   LINK UNDERLINE ANIMATION
+   ============================================ */
 .link-underline {
   position: relative;
 }
@@ -107,4 +165,64 @@ button:active {
 
 .link-underline:hover::after {
   width: 100%;
+}
+
+/* ============================================
+   GLASSMORPHISM UTILITIES
+   ============================================ */
+.glass {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.glass-dark {
+  background: rgba(47, 39, 35, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* ============================================
+   REDUCED MOTION (accessibility)
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-marquee {
+    animation: none;
+  }
+}
+
+/* ============================================
+   SELECTION COLOR
+   ============================================ */
+::selection {
+  background: #c8a27b;
+  color: white;
+}
+
+/* ============================================
+   SCROLLBAR STYLING (desktop)
+   ============================================ */
+@media (min-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f7f2ec;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #c8a27b;
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #a88a5b;
+  }
 }

@@ -1,0 +1,243 @@
+@startuml Lumiere_Jewels_Activity_Diagram
+!theme plain
+skinparam backgroundColor #f7f2ec
+skinparam activityBackgroundColor #faf8f5
+skinparam activityBorderColor #c8a27b
+skinparam arrowColor #8e7f74
+skinparam noteBkgColor #fff5f0
+skinparam noteBorderColor #c8a27b
+
+title Lumière Jewels - User & Admin Activity Diagram
+
+|#f7f2ec|Customer Journey|
+start
+:User visits homepage;
+note right
+  /page.tsx
+  Load navbar + hero section
+end note
+
+:App fetches products from Supabase;
+note right
+  createClient() initializes
+  Supabase browser client
+end note
+
+if (User selects category?) then (Yes)
+  :Set activeCategory state;
+  :Re-fetch products with category filter;
+else (No - View All)
+  :activeCategory = 'tout';
+  :Fetch all products;
+endif
+
+:Display ProductGrid with ProductCards;
+note right
+  Components:
+  - ProductGrid.tsx
+  - ProductCard.tsx
+  - ProductCard shows image, title,
+    price, discount badge
+end note
+
+:User views trending section;
+note right
+  Filter: products.filter(p => is_trending)
+  Display featured items
+end note
+
+if (User clicks product?) then (Yes)
+  :Navigate to /product/[id];
+  :Load product detail page;
+  note right
+    product/[id]/page.tsx
+    Load full product info
+  end note
+  
+  :Display ImageCarousel;
+  note right
+    Uses Embla Carousel React
+    Multiple product images
+    Smooth transitions
+  end note
+  
+  :Show full description & pricing;
+  note right
+    formatPrice(price) → "X MAD"
+    Calculate sale price if discount
+    hasDiscount() shows badge
+  end note
+  
+  :User can (future);
+  note right
+    - Add to cart
+    - Add to wishlist
+    - View reviews
+    - Check inventory
+  end note
+else (No)
+  :Browse more products;
+endif
+
+|#f7f2ec|Admin Journey|
+:Admin navigates to /admin;
+note right
+  admin/page.tsx - Login page
+  Branded interface with
+  email/password fields
+end note
+
+:Admin enters credentials;
+:Submit login form;
+
+:System calls Supabase Auth;
+note right
+  supabase.auth.signInWithPassword()
+  Validates credentials
+  against Supabase Auth
+end note
+
+if (Credentials valid?) then (Yes)
+  :Authentication successful;
+  :Router redirects to /admin/dashboard;
+  note right
+    admin/dashboard/page.tsx
+    Protected route
+  end note
+  
+  :Display admin dashboard;
+  note right
+    Admin components:
+    - ProductList.tsx
+    - ProductForm.tsx
+  end note
+  
+  if (Admin action?) then (View Products)
+    :Fetch all products from Supabase;
+    :Display ProductList with edit/delete;
+  else if (Create Product)
+    :Show ProductForm;
+    :Admin enters product details;
+    note right
+      - title, description
+      - original_price
+      - discount_percentage
+      - category (8 types)
+      - images[] (URLs)
+      - is_trending flag
+    end note
+    
+    :Validate form data;
+    :Submit to Supabase INSERT;
+    :Success - Refresh product list;
+  else if (Edit Product)
+    :Select product from list;
+    :Load ProductForm with data;
+    :Update fields;
+    :Submit to Supabase UPDATE;
+    :Success - Refresh list;
+  else if (Delete Product)
+    :Confirm deletion;
+    :Submit to Supabase DELETE;
+    :Success - Remove from list;
+  endif
+  
+else (Invalid)
+  :Show error message;
+  note right
+    "Email ou mot de passe incorrect"
+    French error message
+    Clear password field
+  end note
+  :Admin retries login;
+endif
+
+|#f7f2ec|Data Flow|
+:All operations interact with Supabase;
+note right
+  Database: PostgreSQL (managed)
+  Tables:
+  - products (main catalog)
+  - auth (user credentials)
+  
+  Client Libraries:
+  - @supabase/supabase-js
+  - @supabase/ssr
+end note
+
+:Product data structure;
+note right
+  Type Product {
+    id: string
+    title: string
+    description: string | null
+    original_price: number
+    discount_percentage: number
+    category: Category
+    images: string[]
+    is_trending: boolean
+    created_at: string
+  }
+  
+  Category = 'bagues' | 'colliers' |
+  'bracelets' | 'boucles' | 'traditionnel' |
+  'pendentifs' | 'ensembles' | 'autres'
+end note
+
+:Frontend renders components;
+note right
+  Rendering:
+  - Next.js App Router
+  - Server/Client components
+  - Tailwind CSS + Inline styles
+  - Framer Motion animations
+  - Lucide React icons
+end note
+
+|#f7f2ec|Utility Operations|
+:Price calculations;
+note right
+  getSalePrice(price, discount%)
+  = price * (1 - discount/100)
+end note
+
+:Price formatting;
+note right
+  formatPrice(price)
+  = "X MAD" (Moroccan Dirham)
+  Locale: fr-MA
+end note
+
+:Discount check;
+note right
+  hasDiscount(discount%)
+  Returns true if > 0
+end note
+
+|#f7f2ec|Result|
+:Display optimized UI;
+note right
+  Features:
+  - Glassmorphic design
+  - Responsive layout
+  - Luxury typography
+  - Smooth animations
+  - Mobile-first approach
+end note
+
+:User engagement;
+note right
+  Browse, filter, view details
+  Admin manages inventory
+  Seamless Supabase integration
+end note
+
+end
+
+legend right
+  |<#c8a27b> Color Coding |
+  |<#fff5f0> System components |
+  |<#faf8f5> Activity flows |
+endlegend
+
+@enduml
