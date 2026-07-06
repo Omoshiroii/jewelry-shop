@@ -10,4 +10,5 @@ export type Product = {
   images: string[]
   is_trending: boolean
   created_at: string
+  favorites_count?: number
 }

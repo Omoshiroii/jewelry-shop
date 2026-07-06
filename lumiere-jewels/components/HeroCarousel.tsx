@@ -1,86 +1,64 @@
 'use client'
-import { useState, useEffect, useCallback } from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
-
-const slides = [
-  { image: 'https://images.unsplash.com/photo-1617038220319-276d3cfab638?q=80&w=1920', alt: 'Bijoux artisanaux' },
-  { image: 'https://images.unsplash.com/photo-1611652022419-a9419f74343d?q=80&w=1920', alt: 'Collection élégance' },
-  { image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=1920', alt: 'Pièces uniques' },
-  { image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1920', alt: 'Or et diamants' },
-]
+import Link from 'next/link'
 
 export default function HeroCarousel() {
-  const [current, setCurrent] = useState(0)
-  const [isTransitioning, setIsTransitioning] = useState(false)
-
-  const goTo = useCallback((index) => {
-    if (isTransitioning) return
-    setIsTransitioning(true)
-    setCurrent(index)
-    setTimeout(() => setIsTransitioning(false), 800)
-  }, [isTransitioning])
-
-  const next = useCallback(() => goTo((current + 1) % slides.length), [current, goTo])
-  const prev = useCallback(() => goTo((current - 1 + slides.length) % slides.length), [current, goTo])
-
-  useEffect(() => {
-    const timer = setInterval(next, 5000)
-    return () => clearInterval(timer)
-  }, [next])
-
   return (
-    <section className="relative w-full h-[100dvh] overflow-hidden">
-      {slides.map((slide, index) => (
-        <div key={index} className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-          index === current ? 'opacity-100 z-10' : 'opacity-0 z-0'
-        }`}>
-          <img src={slide.image} alt={slide.alt} className="w-full h-full object-cover" style={{ filter: 'brightness(0.55) saturate(1.2)' }} />
-        </div>
-      ))}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#2E1E0F]/40 via-transparent to-[#2E1E0F]/70 z-20" />
-      <div className="absolute inset-0 bg-gradient-to-r from-[#88292F]/20 to-transparent z-20" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#f7f2ec] via-transparent to-transparent z-20" style={{ top: '70%' }} />
-      <div className="absolute top-20 right-10 w-32 h-32 bg-[#FCB9B2]/20 rounded-full blur-3xl animate-float z-10" />
-      <div className="absolute bottom-40 left-10 w-40 h-40 bg-[#c8a27b]/15 rounded-full blur-3xl animate-float-slow z-10" />
+    <section className="relative w-full min-h-[92vh] md:min-h-screen bg-[#f7f2ec] flex flex-col md:flex-row items-stretch border-b border-[#e5c5a4]/15">
+      {/* Left Column: Premium Fashion Photo */}
+      <div className="relative w-full md:w-1/2 min-h-[50vh] md:min-h-0 overflow-hidden group">
+        <img 
+          src="https://images.unsplash.com/photo-1617038220319-276d3cfab638?q=80&w=1200" 
+          alt="LILOOK Gold Jewelry Close-up" 
+          className="w-full h-full object-cover scale-100 group-hover:scale-105 transition-transform duration-[2.5s] ease-out"
+          style={{ filter: 'brightness(0.95) saturate(1.05)' }}
+        />
+        {/* Subtle Luxury Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#2f2723]/30 via-transparent to-transparent pointer-events-none" />
+      </div>
 
-      <div className="absolute inset-0 z-30 flex flex-col items-center justify-center text-center px-6">
-        <div className="overflow-hidden mb-4">
-          <span className="inline-block text-[10px] tracking-[4px] text-[#FCB9B2] uppercase animate-fade-in-up" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
-            Bijoux Artisanaux Marocains
+      {/* Right Column: Editorial Typography & Content */}
+      <div className="w-full md:w-1/2 flex flex-col justify-center px-6 py-12 md:px-16 md:py-20 relative bg-[#f7f2ec]">
+        <div className="absolute top-10 right-10 w-24 h-24 bg-[#c8a27b]/5 rounded-full blur-2xl animate-float pointer-events-none" />
+        
+        <div className="max-w-[460px] mx-auto w-full">
+          <span className="text-[10px] tracking-[4px] text-[#c8a27b] uppercase font-inter block mb-4 animate-fade-in-up">
+            Collection Artisanale • 2026
           </span>
+          
+          <h1 
+            className="font-cormorant text-[3.2rem] md:text-[4.5rem] leading-[1] font-light text-[#2f2723] mb-6 animate-fade-in-up" 
+            style={{ fontFamily: "'Cormorant Garamond', serif", animationDelay: '200ms', animationFillMode: 'both' }}
+          >
+            Des bijoux qui<br />
+            <em className="italic font-normal text-[#c8a27b]">subliment</em><br />
+            votre quotidien.
+          </h1>
+          
+          <p 
+            className="text-[13px] md:text-[14px] leading-[1.8] text-[#8e7f74] mb-8 font-inter animate-fade-in-up"
+            style={{ animationDelay: '400ms', animationFillMode: 'both' }}
+          >
+            Inspirées de la lumière marocaine et du raffinement parisien, nos pièces en acier inoxydable sont conçues pour résister à la vie, à l&apos;eau, et ne jamais ternir.
+          </p>
+          
+          <div 
+            className="flex flex-col sm:flex-row gap-4 animate-fade-in-up"
+            style={{ animationDelay: '600ms', animationFillMode: 'both' }}
+          >
+            <Link href="/catalogue" className="flex-1 sm:flex-none">
+              <button className="w-full sm:px-8 py-4 bg-[#2f2723] text-white rounded-full text-[11px] tracking-[2px] uppercase font-inter hover:bg-[#c8a27b] hover:shadow-md transition-all duration-300">
+                Découvrir la collection
+              </button>
+            </Link>
+            <Link href="/catalogue?filter=trending" className="flex-1 sm:flex-none">
+              <button className="w-full sm:px-8 py-4 bg-transparent border border-[#e5c5a4] text-[#2f2723] rounded-full text-[11px] tracking-[2px] uppercase font-inter hover:bg-[#2f2723] hover:text-white hover:border-[#2f2723] transition-all duration-300">
+                Les tendances
+              </button>
+            </Link>
+          </div>
         </div>
-        <h1 className="font-cormorant text-[clamp(3.2rem,13vw,8rem)] leading-[0.88] font-medium text-white mb-6 animate-fade-in-up" style={{ fontFamily: "'Cormorant Garamond', serif", animationDelay: '0.5s', animationFillMode: 'both', textShadow: '0 4px 40px rgba(0,0,0,0.4)' }}>
-          Bijoux qui<br /><em className="italic font-light text-[#FCB9B2]">murmurent</em><br />l'élégance.
-        </h1>
-        <p className="text-[14px] md:text-[16px] leading-[1.8] text-white/80 max-w-[400px] mb-10 animate-fade-in-up" style={{ animationDelay: '0.7s', animationFillMode: 'both' }}>
-          Pièces féminines inspirées de la chaleur marocaine, créées pour les femmes qui romanticisent chaque détail.
-        </p>
-        <a href="#collections" className="animate-fade-in-up" style={{ animationDelay: '0.9s', animationFillMode: 'both' }}>
-          <button className="px-8 py-4 bg-white/10 backdrop-blur-md border border-white/30 text-white rounded-full text-[13px] tracking-[2px] uppercase hover:bg-[#88292F]/60 hover:border-[#88292F]/50 transition-all duration-500">
-            Découvrir
-          </button>
-        </a>
-      </div>
-
-      <button onClick={prev} className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-40 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all" aria-label="Précédent">
-        <ChevronLeft size={20} strokeWidth={1.5} />
-      </button>
-      <button onClick={next} className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-40 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all" aria-label="Suivant">
-        <ChevronRight size={20} strokeWidth={1.5} />
-      </button>
-
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 flex gap-3">
-        {slides.map((_, index) => (
-          <button key={index} onClick={() => goTo(index)} className={`h-1.5 rounded-full transition-all duration-500 ${
-            index === current ? 'w-8 bg-[#FCB9B2]' : 'w-1.5 bg-white/40 hover:bg-white/60'
-          }`} aria-label={`Slide ${index + 1}`} />
-        ))}
-      </div>
-
-      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-2 animate-bounce">
-        <span className="text-[10px] tracking-[3px] text-white/60 uppercase">Scroll</span>
-        <div className="w-px h-8 bg-gradient-to-b from-white/60 to-transparent" />
       </div>
     </section>
   )
 }
+

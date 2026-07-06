@@ -1,9 +1,8 @@
 'use client'
-import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { X, ShoppingBag, Trash2, Plus, Minus, ArrowRight } from 'lucide-react'
 import { useCart } from '@/hooks/useCart'
 import { formatPrice } from '@/lib/utils'
-import CheckoutModal from './CheckoutModal'
 
 type Props = {
   isOpen: boolean
@@ -12,7 +11,7 @@ type Props = {
 
 export default function CartDrawer({ isOpen, onClose }: Props) {
   const { cart, removeFromCart, updateQuantity, cartCount, cartTotal } = useCart()
-  const [checkoutOpen, setCheckoutOpen] = useState(false)
+  const router = useRouter()
 
   return (
     <>
@@ -157,7 +156,10 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
             </p>
 
             <button
-              onClick={() => setCheckoutOpen(true)}
+              onClick={() => {
+                onClose()
+                router.push('/checkout')
+              }}
               className="w-full bg-gradient-to-r from-[#2f2723] to-[#1a120e] hover:from-[#c8a27b] hover:to-[#a88a5b] text-white py-4 rounded-full font-inter text-xs tracking-[2px] uppercase transition-all duration-500 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
             >
               Commander <ArrowRight size={14} />
@@ -165,9 +167,6 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
           </div>
         )}
       </div>
-
-      {/* Checkout Modal Popup */}
-      <CheckoutModal isOpen={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
     </>
   )
 }

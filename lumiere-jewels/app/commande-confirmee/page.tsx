@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import { CheckCircle2, Phone, ArrowLeft, Loader2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase'
 import { formatPrice } from '@/lib/utils'
+import { WHATSAPP_NUMBER, SITE_URL } from '@/lib/constants'
 
 type Order = {
   id: string
@@ -90,19 +91,20 @@ function OrderConfirmationContent() {
   }
 
   // Format WhatsApp confirmation text
-  const WHATSAPP_NUMBER = '212600000000'
   const articleList = order.items
-    .map(item => `- ${item.quantity}x ${item.title} (${formatPrice(item.price)})`)
+    .map(item => `  • ${item.quantity}x ${item.title} (${formatPrice(item.price)})`)
     .join('\n')
   
   const rawMsg = `Bonjour! Je viens de passer une commande sur votre site LILOOK.
-Référence: ${order.id.substring(0, 8)}...
+Référence: #${order.id.substring(0, 8).toUpperCase()}
 Nom complet: ${order.customer_name}
 Téléphone: ${order.customer_phone}
 Adresse: ${order.customer_address}, ${order.customer_city}
 Articles:
 ${articleList}
 Total: ${formatPrice(order.total_price)}
+
+🔗 Suivi de ma commande: ${SITE_URL}/commande/${order.id}
 
 Merci de confirmer ma commande.`
 

@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar'
 import BottomNav from '@/components/BottomNav'
 import SplashScreen from '@/components/SplashScreen'
 import AnalyticsTracker from '@/components/AnalyticsTracker'
+import WhatsAppButton from '@/components/WhatsAppButton'
 
 export const metadata: Metadata = {
   title: "LILOOK — Bijoux d'Exception",
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AnalyticsTracker />
         <Navbar />
         <main>{children}</main>
+        <WhatsAppButton />
         <BottomNav />
       </body>
     </html>

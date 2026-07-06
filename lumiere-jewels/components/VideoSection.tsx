@@ -1,40 +1,79 @@
 'use client'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
+import Link from 'next/link'
+
+const spotlightPhotos = [
+  {
+    src: 'https://images.unsplash.com/photo-1611652022419-a9419f74343d?q=80&w=600',
+    title: 'Les bagues',
+    category: 'Élégance'
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1602751584552-8ba420552259?q=80&w=600',
+    title: 'Les colliers',
+    category: 'Raffinement'
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=600',
+    title: 'Les bracelets',
+    category: 'Modernité'
+  }
+]
 
 export default function VideoSection() {
   const { ref, isVisible } = useScrollReveal()
 
   return (
-    <section ref={ref} className="relative w-full min-h-[90vh] overflow-hidden">
-      <div className="absolute inset-0">
-        <video autoPlay muted loop playsInline className="w-full h-full object-cover" poster="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1920">
-          <source src="https://assets.mixkit.co/videos/preview/mixkit-waves-in-the-water-1164-large.mp4" type="video/mp4" />
-        </video>
-      </div>
-      <div className="absolute inset-0 bg-gradient-to-b from-[#f7f2ec] via-transparent to-[#f7f2ec]" style={{ top: '-1px', bottom: '-1px' }} />
-      <div className="absolute inset-0 bg-[#2E1E0F]/30" />
-      <div className="absolute inset-0 bg-gradient-to-r from-[#88292F]/30 to-transparent" />
-      <div className="absolute top-1/3 left-10 w-24 h-24 bg-[#FCB9B2]/30 rounded-full blur-2xl animate-float" />
-      <div className="absolute bottom-1/3 right-10 w-32 h-32 bg-[#c8a27b]/20 rounded-full blur-2xl animate-float-slow" />
+    <section ref={ref} className="py-20 px-5 md:px-12 bg-[#f7f2ec] border-b border-[#e5c5a4]/15">
+      <div className="max-w-[1200px] mx-auto">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <span className={`text-[10px] tracking-[4px] text-[#c8a27b] uppercase block mb-2 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+            Inspirations
+          </span>
+          <h2 
+            className={`font-cormorant text-[2.6rem] md:text-[3.5rem] leading-[1.1] font-light text-[#2f2723] transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+            style={{ fontFamily: "'Cormorant Garamond', serif" }}
+          >
+            Sublimer chaque instant
+          </h2>
+        </div>
 
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-[90vh] text-center px-6">
-        <span className={`text-[10px] tracking-[4px] text-[#FCB9B2] uppercase mb-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-          L'Inspiration
-        </span>
-        <h2 className={`font-cormorant text-[clamp(2.5rem,10vw,6rem)] leading-[0.9] font-medium text-white mb-6 transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: '0 4px 40px rgba(0,0,0,0.4)' }}>
-          Libre comme<br /><em className="italic font-light text-[#FCB9B2]">l'océan</em>
-        </h2>
-        <p className={`text-[15px] md:text-[17px] leading-[1.9] text-white/85 max-w-[450px] mb-8 transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          Nos créations s'inspirent de la nature — du mouvement des vagues à la chaleur du sable doré. Chaque pièce est une invitation au voyage.
-        </p>
-        <div className={`flex items-center gap-6 transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <div className="text-center"><p className="font-cormorant text-[2.5rem] text-[#FCB9B2] font-medium" style={{ fontFamily: "'Cormorant Garamond', serif" }}>18K</p><p className="text-[10px] text-white/60 tracking-[2px] uppercase">Or</p></div>
-          <div className="w-px h-12 bg-white/20" />
-          <div className="text-center"><p className="font-cormorant text-[2.5rem] text-[#FCB9B2] font-medium" style={{ fontFamily: "'Cormorant Garamond', serif" }}>925</p><p className="text-[10px] text-white/60 tracking-[2px] uppercase">Argent</p></div>
-          <div className="w-px h-12 bg-white/20" />
-          <div className="text-center"><p className="font-cormorant text-[2.5rem] text-[#FCB9B2] font-medium" style={{ fontFamily: "'Cormorant Garamond', serif" }}>∞</p><p className="text-[10px] text-white/60 tracking-[2px] uppercase">Unique</p></div>
+        {/* 3 Column Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          {spotlightPhotos.map((photo, index) => (
+            <div 
+              key={index} 
+              className={`group flex flex-col items-center text-center transition-all duration-[1.2s] ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+              }`}
+              style={{ transitionDelay: `${index * 150}ms` }}
+            >
+              {/* Photo Container */}
+              <div className="w-full aspect-[4/5] rounded-[24px] overflow-hidden border border-[#e5c5a4]/20 shadow-sm relative mb-4">
+                <img 
+                  src={photo.src} 
+                  alt={photo.title} 
+                  className="w-full h-full object-cover scale-100 group-hover:scale-105 transition-transform duration-[2s] ease-out"
+                />
+                <div className="absolute inset-0 bg-[#2f2723]/5 pointer-events-none" />
+              </div>
+
+              {/* Title & Info */}
+              <span className="text-[9px] tracking-[2px] text-[#c8a27b] uppercase font-inter mb-1">
+                {photo.category}
+              </span>
+              <h3 
+                className="font-cormorant text-[1.4rem] font-light text-[#2f2723] group-hover:text-[#c8a27b] transition-colors"
+                style={{ fontFamily: "'Cormorant Garamond', serif" }}
+              >
+                {photo.title}
+              </h3>
+            </div>
+          ))}
         </div>
       </div>
     </section>
   )
 }
+
