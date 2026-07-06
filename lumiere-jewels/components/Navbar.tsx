@@ -1,15 +1,26 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { Menu, Search, Heart } from 'lucide-react'
+import { usePathname } from 'next/navigation'
+import { Menu, Search, Heart, ShoppingBag } from 'lucide-react'
 import MenuDrawer from './MenuDrawer'
 import SearchBar from './SearchBar'
+import CartDrawer from './CartDrawer'
 import { useFavorites } from '@/hooks/useFavorites'
+import { useCart } from '@/hooks/useCart'
 
 export default function Navbar() {
+  const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
+  const [cartOpen, setCartOpen] = useState(false)
   const { favoriteCount } = useFavorites()
+  const { cartCount } = useCart()
+
+  // Hide public navigation on admin paths
+  if (pathname?.startsWith('/admin')) {
+    return null
+  }
 
   return (
     <>
@@ -50,24 +61,40 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Right: Favorites */}
-        <Link
-          href="/favoris"
-          className="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/50 transition-colors duration-300"
-          aria-label="Favoris"
-        >
-          <Heart size={18} strokeWidth={1.5} className="text-[#2f2723]" />
-          {favoriteCount > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#c8a27b] text-white text-[9px] font-medium rounded-full flex items-center justify-center">
-              {favoriteCount}
-            </span>
-          )}
-        </Link>
+        {/* Right: Favorites & Cart */}
+        <div className="flex items-center gap-1.5">
+          <Link
+            href="/favoris"
+            className="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/50 transition-colors duration-300"
+            aria-label="Favoris"
+          >
+            <Heart size={18} strokeWidth={1.5} className="text-[#2f2723]" />
+            {favoriteCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#c8a27b] text-white text-[9px] font-medium rounded-full flex items-center justify-center">
+                {favoriteCount}
+              </span>
+            )}
+          </Link>
+          
+          <button
+            onClick={() => setCartOpen(true)}
+            className="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/50 transition-colors duration-300"
+            aria-label="Panier"
+          >
+            <ShoppingBag size={18} strokeWidth={1.5} className="text-[#2f2723]" />
+            {cartCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-[#c8a27b] text-white text-[9px] font-medium rounded-full flex items-center justify-center animate-pulse">
+                {cartCount}
+              </span>
+            )}
+          </button>
+        </div>
       </nav>
 
       {/* Overlays */}
       <MenuDrawer isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
       <SearchBar isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+      <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
     </>
   )
 }

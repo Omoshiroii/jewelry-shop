@@ -16,6 +16,11 @@ export default function BottomNav() {
   const pathname = usePathname()
   const { favoriteCount } = useFavorites()
 
+  // Hide public navigation on admin paths
+  if (pathname?.startsWith('/admin')) {
+    return null
+  }
+
   return (
     <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[92%] max-w-[400px] z-50 bg-white/70 backdrop-blur-xl rounded-full shadow-[0_10px_40px_rgba(0,0,0,0.08)] border border-white/50 md:hidden py-2.5 px-2">
       <div className="flex justify-around items-center">

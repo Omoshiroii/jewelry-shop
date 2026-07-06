@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { createClient } from '@/lib/supabase'
 
 const STORAGE_KEY = 'lilook-favorites'
 
@@ -61,24 +62,33 @@ export function useFavorites() {
     }
   }, [])
 
-  const toggleFavorite = useCallback((productId: string) => {
-    if (globalFavorites.includes(productId)) {
+  const toggleFavorite = useCallback(async (productId: string) => {
+    const isFav = globalFavorites.includes(productId)
+    const supabase = createClient()
+    
+    if (isFav) {
       globalFavorites = globalFavorites.filter(id => id !== productId)
+      saveToStorage(globalFavorites)
+      notifyListeners()
+      await supabase.rpc('decrement_favorite', { product_id: productId })
     } else {
       globalFavorites = [...globalFavorites, productId]
+      saveToStorage(globalFavorites)
+      notifyListeners()
+      await supabase.rpc('increment_favorite', { product_id: productId })
     }
-    saveToStorage(globalFavorites)
-    notifyListeners()
   }, [])
 
   const isFavorite = useCallback((productId: string) => {
     return globalFavorites.includes(productId)
   }, [])
 
-  const removeFavorite = useCallback((productId: string) => {
+  const removeFavorite = useCallback(async (productId: string) => {
     globalFavorites = globalFavorites.filter(id => id !== productId)
     saveToStorage(globalFavorites)
     notifyListeners()
+    const supabase = createClient()
+    await supabase.rpc('decrement_favorite', { product_id: productId })
   }, [])
 
   const favoriteCount = favorites.length

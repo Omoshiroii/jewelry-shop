@@ -5,24 +5,48 @@ import { createClient } from '@/lib/supabase'
 import { Product } from '@/types'
 import { formatPrice, getSalePrice, hasDiscount } from '@/lib/utils'
 import { useFavorites } from '@/hooks/useFavorites'
-import { ArrowLeft, Heart, Share2 } from 'lucide-react'
+import { useCart } from '@/hooks/useCart'
+import { ArrowLeft, Heart, Share2, ShoppingBag } from 'lucide-react'
+import ProductCard from '@/components/ProductCard'
+import CartDrawer from '@/components/CartDrawer'
 
 export default function ProductPage() {
   const { id } = useParams()
   const router = useRouter()
   const [product, setProduct] = useState<Product | null>(null)
+  const [recommendations, setRecommendations] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [activeImg, setActiveImg] = useState(0)
+  const [cartOpen, setCartOpen] = useState(false)
   const { isFavorite, toggleFavorite } = useFavorites()
+  const { addToCart } = useCart()
 
   useEffect(() => {
-    async function fetch() {
+    async function fetchProductAndRecs() {
+      setLoading(true)
       const supabase = createClient()
-      const { data } = await supabase.from('products').select('*').eq('id', id).single()
-      if (data) setProduct(data)
+      
+      // Fetch product details
+      const { data: prodData } = await supabase.from('products').select('*').eq('id', id).single()
+      if (prodData) {
+        setProduct(prodData)
+        
+        // Fetch recommendations from same category, excluding current product
+        const { data: recData } = await supabase
+          .from('products')
+          .select('*')
+          .eq('category', prodData.category)
+          .neq('id', prodData.id)
+          .limit(4)
+          
+        if (recData) {
+          setRecommendations(recData)
+        }
+      }
       setLoading(false)
     }
-    fetch()
+    
+    fetchProductAndRecs()
   }, [id])
 
   if (loading) return (
@@ -154,21 +178,48 @@ export default function ProductPage() {
 
           {/* Quote */}
           <p className="font-cormorant text-[1.1rem] italic text-[#c8a27b] text-center my-8 leading-relaxed" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            "Le luxe devrait se sentir doux, pas fort."
+            &quot;Le luxe devrait se sentir doux, pas fort.&quot;
           </p>
+
+          {/* Recommendations Section */}
+          {recommendations.length > 0 && (
+            <div className="mt-16 pt-10 border-t border-[#e5c5a4]/20">
+              <span className="text-[9px] text-[#c8a27b] tracking-[3px] uppercase block mb-2">Découvrir</span>
+              <h3 className="font-cormorant text-2xl text-[#2f2723] font-medium mb-6" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                Vous Aimerez Aussi
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                {recommendations.map((rec) => (
+                  <ProductCard key={rec.id} product={rec} />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Bottom CTA */}
-      <div className="fixed bottom-0 left-0 w-full px-6 py-4 pb-8 bg-[#f7f2ec]/90 backdrop-blur-xl border-t border-[rgba(200,162,123,0.1)] z-40">
-        <a
-          href={`https://wa.me/212600000000?text=Bonjour! Je suis intéressé(e) par: ${encodeURIComponent(product.title)} (${encodeURIComponent(formatPrice(discounted ? salePrice : product.original_price))})`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block"
+      {/* Bottom CTA Panel */}
+      <div className="fixed bottom-0 left-0 w-full px-6 py-4 pb-8 bg-[#f7f2ec]/90 backdrop-blur-xl border-t border-[#e5c5a4]/15 z-40 flex items-center gap-4">
+        <button
+          onClick={() => {
+            addToCart({
+              id: product.id,
+              title: product.title,
+              price: discounted ? salePrice : product.original_price,
+              image: product.images?.[0] || null,
+              category: product.category
+            })
+            setCartOpen(true)
+          }}
+          className="flex-1 bg-gradient-to-r from-[#2f2723] to-[#1a120e] hover:from-[#c8a27b] hover:to-[#a88a5b] text-white py-4 rounded-full font-inter text-xs tracking-[2px] uppercase transition-all duration-500 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
         >
-        </a>
+          <ShoppingBag size={14} />
+          Ajouter au Panier
+        </button>
       </div>
+
+      {/* Cart Drawer */}
+      <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
     </div>
   )
 }

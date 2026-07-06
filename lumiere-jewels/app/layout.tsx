@@ -3,15 +3,16 @@ import './globals.css'
 import Navbar from '@/components/Navbar'
 import BottomNav from '@/components/BottomNav'
 import SplashScreen from '@/components/SplashScreen'
+import AnalyticsTracker from '@/components/AnalyticsTracker'
 
 export const metadata: Metadata = {
-  title: `LILOOK — Bijoux d'Exception`,
-  description: 'Découvrez notre collection de bijoux artisanaux marocains. Pièces féminines inspirées de la chaleur marocaine.',
+  title: "LILOOK — Bijoux d'Exception",
+  description: "Découvrez notre collection de bijoux artisanaux marocains. Pièces féminines inspirées de la chaleur marocaine.",
   keywords: ['bijoux', 'maroc', 'artisanal', 'bagues', 'colliers', 'bracelets', 'or', 'argent', 'lilook'],
   authors: [{ name: 'LILOOK' }],
   openGraph: {
-    title: `LILOOK — Bijoux d'Exception`,
-    description: 'Découvrez notre collection de bijoux artisanaux marocains.',
+    title: "LILOOK — Bijoux d'Exception",
+    description: "Découvrez notre collection de bijoux artisanaux marocains.",
     type: 'website',
     images: ['/og-image.jpg'],
   },
@@ -24,15 +25,12 @@ export const viewport: Viewport = {
   themeColor: '#f7f2ec',
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr">
       <body className="bg-[#f7f2ec] antialiased">
         <SplashScreen />
+        <AnalyticsTracker />
         <Navbar />
         <main>{children}</main>
         <BottomNav />
