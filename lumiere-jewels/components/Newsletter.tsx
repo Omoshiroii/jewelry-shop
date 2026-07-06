@@ -42,7 +42,7 @@ export default function Newsletter() {
           </div>
           {submitted && <p className="mt-3 text-[12px] text-[#4D6A6D] animate-fade-in">Merci ! Vous êtes inscrite à notre newsletter.</p>}
         </form>
-        <p className="mt-4 text-[10px] text-[#b5a89e] tracking-wide">Pas de spam, que de l'élégance. Désinscription à tout moment.</p>
+        <p className="mt-4 text-[10px] text-[#b5a89e] tracking-wide">Pas de spam, que de l&apos;élégance. Désinscription à tout moment.</p>
       </div>
     </section>
   )

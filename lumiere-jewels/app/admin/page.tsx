@@ -28,7 +28,7 @@ export default function AdminLogin() {
       <div style={{ width: '100%', maxWidth: '400px' }}>
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <h1 style={{  fontFamily: 'Cormorant Garamond, serif', fontSize: '36px', fontWeight: 500, letterSpacing: '4px', color: '#2f2723'}}>LILOOK</h1>
-          <p style={{ fontSize: '10px', letterSpacing: '2px', color: '#c8a27b', textTransform: 'uppercase', marginTop: '6px' }}>Don't look back</p>
+          <p style={{ fontSize: '10px', letterSpacing: '2px', color: '#c8a27b', textTransform: 'uppercase', marginTop: '6px' }}>Don&apos;t look back</p>
         </div>
         <div style={{ background: 'white', borderRadius: '16px', padding: '24px', border: '1px solid #f0e8e8' }}>
           <div style={{ marginBottom: '16px' }}>

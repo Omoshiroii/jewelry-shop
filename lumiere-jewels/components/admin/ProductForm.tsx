@@ -217,7 +217,7 @@ export default function ProductForm({ product, onSuccess, onCancel }: Props) {
               <p className="text-xs text-gray-400 font-inter">
                 {uploading ? 'Envoi en cours...' : 'Appuyer pour ajouter des photos'}
               </p>
-              <p className="text-[10px] text-gray-300 font-inter mt-1">JPG, PNG jusqu'à 5MB</p>
+              <p className="text-[10px] text-gray-300 font-inter mt-1">JPG, PNG jusqu&apos;à 5MB</p>
               <input
                 type="file"
                 accept="image/*"

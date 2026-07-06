@@ -13,7 +13,7 @@ export default function AnnouncementBar() {
   }
 
   return (
-    <div className="fixed top-0 left-0 w-full z-[60] bg-[#2f2723] overflow-hidden" style={{ height: '32px' }}>
+    <div className="w-full bg-[#2f2723] overflow-hidden" style={{ height: '32px' }}>
       <div className="h-full flex items-center justify-center relative">
         {/* Marquee */}
         <div className="flex items-center overflow-hidden whitespace-nowrap w-full">

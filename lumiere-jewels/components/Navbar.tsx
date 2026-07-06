@@ -26,11 +26,14 @@ export default function Navbar() {
   return (
     <>
       <div className="fixed top-0 left-0 w-full z-50 flex flex-col">
+        {/* Announcement strip — sits ABOVE the nav, no overlap */}
         <AnnouncementBar />
+
+        {/* Main navigation bar */}
         <nav
           className="w-full px-5 py-3 flex items-center justify-between relative"
           style={{
-            background: 'rgba(247, 242, 236, 0.85)',
+            background: 'rgba(247, 242, 236, 0.92)',
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
             borderBottom: '1px solid rgba(200, 162, 123, 0.08)',

@@ -20,7 +20,7 @@ export default function Footer() {
         <div className="max-w-md mx-auto">
           <div className="text-center mb-10">
             <h3 className="font-cormorant text-[28px] font-semibold tracking-[4px] text-white mb-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>LILOOK</h3>
-            <p className="text-[12px] text-[#C9ADA1] tracking-[2px] uppercase">Bijoux qui murmurent l'élégance</p>
+            <p className="text-[12px] text-[#C9ADA1] tracking-[2px] uppercase">Bijoux qui murmurent l&apos;élégance</p>
           </div>
 
           <div className="grid grid-cols-2 gap-8 mb-10">

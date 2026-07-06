@@ -19,10 +19,10 @@ export default function StorySection() {
         <div ref={textRef} className={`transition-all duration-1000 delay-200 ${textVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <span className="text-[10px] tracking-[3px] text-[#88292F] uppercase block mb-3">notre histoire</span>
           <h2 className="font-cormorant text-[2.6rem] font-medium leading-[1.05] text-[#2e1e0f] mb-6" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            L'art du bijou<br /><em className="italic font-light text-[#88292F]">marocain</em>
+            L&apos;art du bijou<br /><em className="italic font-light text-[#88292F]">marocain</em>
           </h2>
           <div className="space-y-4">
-            <p className="text-[14px] leading-[1.9] text-[#8e7f74]">Chaque pièce LILOOK naît des mains d'artisans marocains passionnés, dans un atelier où la tradition rencontre la modernité.</p>
+            <p className="text-[14px] leading-[1.9] text-[#8e7f74]">Chaque pièce LILOOK naît des mains d&apos;artisans marocains passionnés, dans un atelier où la tradition rencontre la modernité.</p>
             <p className="text-[14px] leading-[1.9] text-[#8e7f74]">Nous sélectionnons les matériaux les plus nobles — or, argent, pierres précieuses — pour créer des bijoux qui racontent une histoire, la vôtre.</p>
           </div>
           <div className="flex gap-8 mt-10 pt-8 border-t border-[#e8e0d8]">

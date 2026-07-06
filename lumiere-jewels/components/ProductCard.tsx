@@ -11,6 +11,8 @@ interface ProductCardProps {
   variant?: 'default' | 'large' | 'horizontal'
 }
 
+const CURRENT_TIME = Date.now()
+
 export default function ProductCard({ product, variant = 'default' }: ProductCardProps) {
   const { isFavorite, toggleFavorite } = useFavorites()
   const discounted = hasDiscount(product.discount_percentage)
@@ -62,7 +64,7 @@ export default function ProductCard({ product, variant = 'default' }: ProductCar
     )
   }
 
-  const isNew = new Date(product.created_at).getTime() > Date.now() - 14 * 24 * 60 * 60 * 1000 // 14 days
+  const isNew = new Date(product.created_at).getTime() > CURRENT_TIME - 14 * 24 * 60 * 60 * 1000 // 14 days
   const isCoupDeCoeur = (product.favorites_count || 0) >= 5
 
   return (

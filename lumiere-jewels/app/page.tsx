@@ -1,10 +1,7 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase'
 import HeroCarousel from '@/components/HeroCarousel'
-import EditorialBanner from '@/components/EditorialBanner'
-import VideoSection from '@/components/VideoSection'
-import LifestyleGrid from '@/components/LifestyleGrid'
 import Marquee from '@/components/Marquee'
 import CollectionGrid from '@/components/CollectionGrid'
 import StorySection from '@/components/StorySection'
@@ -14,18 +11,17 @@ import Newsletter from '@/components/Newsletter'
 import Footer from '@/components/Footer'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Product = any
+
 export default function HomePage() {
-  const [newest, setNewest] = useState([])
-  const [trending, setTrending] = useState([])
-  const [mostLiked, setMostLiked] = useState([])
-  const [allProducts, setAllProducts] = useState([])
+  const [newest, setNewest] = useState<Product[]>([])
+  const [trending, setTrending] = useState<Product[]>([])
+  const [mostLiked, setMostLiked] = useState<Product[]>([])
+  const [allProducts, setAllProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    fetchProducts()
-  }, [])
-
-  async function fetchProducts() {
+  const fetchProducts = useCallback(async () => {
     setLoading(true)
     const supabase = createClient()
     const { data: newestData } = await supabase.from('products').select('*').order('created_at', { ascending: false }).limit(8)
@@ -37,25 +33,36 @@ export default function HomePage() {
     if (likedData) setMostLiked(likedData)
     if (allData) setAllProducts(allData)
     setLoading(false)
-  }
+  }, [])
 
-  const productPairs = []
-  for (let i = 0; i < allProducts.length; i += 2) {
-    productPairs.push(allProducts.slice(i, i + 2))
-  }
+  useEffect(() => {
+    fetchProducts()
+  }, [fetchProducts])
 
   return (
     <div className="min-h-screen bg-[#f7f2ec] font-inter" style={{ fontFamily: "'Inter', sans-serif" }}>
+      {/* 1. Hero — full-width editorial splash */}
       <HeroCarousel />
-      <EditorialBanner />
-      <VideoSection />
-      <LifestyleGrid />
+
+      {/* 2. Nouveautés marquee — right after hero, products visible immediately on scroll */}
       {newest.length > 0 && <Marquee products={newest} label="nouveautés" />}
-      <CollectionGrid />
-      <StorySection />
+
+      {/* 3. Trending products — users see products fast */}
       {trending.length > 0 && <TrendingSection products={trending} />}
+
+      {/* 4. Collections grid — browse by category */}
+      <CollectionGrid />
+
+      {/* 5. Most liked — social proof */}
       {mostLiked.length > 0 && <MostLikedSection products={mostLiked} />}
-      <AllProductsSection products={allProducts} productPairs={productPairs} loading={loading} />
+
+      {/* 6. Full catalogue */}
+      <AllProductsSection products={allProducts} loading={loading} />
+
+      {/* 7. Brand story — after products, not before */}
+      <StorySection />
+
+      {/* 8. Social / Newsletter / Map / Footer */}
       <InstagramCollage />
       <Newsletter />
       <MapSection />
@@ -64,7 +71,7 @@ export default function HomePage() {
   )
 }
 
-function TrendingSection({ products }) {
+function TrendingSection({ products }: { products: Product[] }) {
   const { ref, isVisible } = useScrollReveal()
   return (
     <section className="px-5 py-16 max-w-[1200px] mx-auto">
@@ -77,7 +84,7 @@ function TrendingSection({ products }) {
       
       {/* Mobile: scroll, Desktop: 4 columns grid */}
       <div className="flex md:grid md:grid-cols-4 gap-4 overflow-x-auto md:overflow-visible pb-4 md:pb-0 scroll-snap-x mandatory hide-scrollbar">
-        {products.slice(0, 4).map((product) => (
+        {products.slice(0, 4).map((product: Product) => (
           <div key={product.id} className="flex-shrink-0 w-[240px] md:w-auto scroll-snap-start">
             <ProductCard product={product} />
           </div>
@@ -87,7 +94,7 @@ function TrendingSection({ products }) {
   )
 }
 
-function AllProductsSection({ products, loading }) {
+function AllProductsSection({ products, loading }: { products: Product[]; loading: boolean }) {
   const { ref, isVisible } = useScrollReveal()
   return (
     <section className="px-5 pb-20 max-w-[1200px] mx-auto">
@@ -108,7 +115,7 @@ function AllProductsSection({ products, loading }) {
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-          {products.map((product) => (
+          {products.map((product: Product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
@@ -155,7 +162,7 @@ function MapSection() {
   )
 }
 
-function MostLikedSection({ products }) {
+function MostLikedSection({ products }: { products: Product[] }) {
   const { ref, isVisible } = useScrollReveal()
   return (
     <section className="py-16 bg-[#e5c5a4]/5 border-y border-[#e5c5a4]/10 mb-16">
@@ -169,7 +176,7 @@ function MostLikedSection({ products }) {
         
         {/* Mobile: scroll, Desktop: 4 columns grid */}
         <div className="flex md:grid md:grid-cols-4 gap-4 overflow-x-auto md:overflow-visible pb-4 md:pb-0 scroll-snap-x mandatory hide-scrollbar">
-          {products.slice(0, 4).map((product) => (
+          {products.slice(0, 4).map((product: Product) => (
             <div key={product.id} className="flex-shrink-0 w-[240px] md:w-auto scroll-snap-start">
               <ProductCard product={product} />
             </div>

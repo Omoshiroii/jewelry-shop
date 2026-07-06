@@ -6,7 +6,7 @@ import { Product } from '@/types'
 import { formatPrice, getSalePrice, hasDiscount } from '@/lib/utils'
 import { useFavorites } from '@/hooks/useFavorites'
 import { useCart } from '@/hooks/useCart'
-import { ArrowLeft, Heart, Share2, ShoppingBag } from 'lucide-react'
+import { ArrowLeft, Heart, Share2, ShoppingBag, ChevronDown, ChevronUp, ShieldCheck, Sparkles, Truck } from 'lucide-react'
 import ProductCard from '@/components/ProductCard'
 import CartDrawer from '@/components/CartDrawer'
 
@@ -21,6 +21,9 @@ export default function ProductPage() {
   const { isFavorite, toggleFavorite } = useFavorites()
   const { addToCart } = useCart()
 
+  // Accordion states
+  const [openSection, setOpenSection] = useState<'details' | 'care' | 'shipping' | null>('details')
+
   useEffect(() => {
     async function fetchProductAndRecs() {
       setLoading(true)
@@ -30,6 +33,7 @@ export default function ProductPage() {
       const { data: prodData } = await supabase.from('products').select('*').eq('id', id).single()
       if (prodData) {
         setProduct(prodData)
+        setActiveImg(0)
         
         // Fetch recommendations from same category, excluding current product
         const { data: recData } = await supabase

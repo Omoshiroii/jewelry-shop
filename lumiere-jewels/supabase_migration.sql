@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS public.orders (
   customer_name TEXT NOT null,
   customer_phone TEXT NOT null,
   customer_address TEXT NOT null,
+  customer_company TEXT,
+  customer_apartment TEXT,
   customer_city TEXT NOT null,
   customer_zip TEXT,
   customer_country TEXT DEFAULT 'Maroc' NOT null,
