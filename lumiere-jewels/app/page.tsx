@@ -97,11 +97,10 @@ function CategoryStrip({ active, onSelect }: { active: string; onSelect: (v: str
           <button
             key={cat.value}
             onClick={() => onSelect(cat.value)}
-            className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-[11px] font-inter tracking-[1px] transition-all duration-300 ${
-              active === cat.value
-                ? 'bg-[#1e1424] text-white shadow-md'
-                : 'bg-white border border-[#f0c4d0]/50 text-[#4a3550] hover:border-[#d4849a] hover:text-[#d4849a]'
-            }`}
+            className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-[11px] font-inter tracking-[1px] transition-all duration-300 ${active === cat.value
+              ? 'bg-[#1e1424] text-white shadow-md'
+              : 'bg-white border border-[#f0c4d0]/50 text-[#4a3550] hover:border-[#d4849a] hover:text-[#d4849a]'
+              }`}
           >
             <span>{cat.label}</span>
           </button>
@@ -211,9 +210,9 @@ function NewestSection({ products }: { products: Product[] }) {
 
 function MapSection() {
   const { ref, isVisible } = useScrollReveal()
-  const WHATSAPP_NUMBER = '212600000000'
-  const STORE_ADDRESS = 'Casablanca, Maroc'
-  const MAP_EMBED_URL = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d106376.56000612377!2d-7.6693949!3d33.5731104!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xda7cd4778aa113b%3A0xb06c1d84f310fd3!2sCasablanca%2C%20Maroc!5e0!3m2!1sfr!2sus!4v1715184000000!5m2!1sfr!2sus'
+  const WHATSAPP_NUMBER = '+212 600-000000'
+  const STORE_ADDRESS = 'Stand Lilook Bijoux - Socco Alto Mall, en face de Paul, Tanger, Maroc'
+  const MAP_EMBED_URL = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d672.2174342424049!2d-5.841404687897888!3d35.78130684818321!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd0c789bd618661d%3A0x87aff69d2a2c175f!2sSocco%20Alto!5e1!3m2!1sen!2sma!4v1783385505442!5m2!1sen!2sma'
 
   return (
     <section className="px-4 pb-10 max-w-[1200px] mx-auto">
@@ -235,12 +234,12 @@ function MapSection() {
             </div>
           </div>
           <a
-            href={`https://wa.me/${WHATSAPP_NUMBER}?text=Bonjour LILOOK ! Je souhaite prendre rendez-vous.`}
+            href={`https://wa.me/${WHATSAPP_NUMBER}?text=Bonjour LILOOK ! Je suis intéressé par vos produits et je voudrais savoir plus d'informations.`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#1e1424] text-white rounded-full text-[11px] tracking-[1.5px] font-medium hover:bg-[#d4849a] transition-colors duration-300"
           >
-            Prendre rendez-vous
+            contactez-nous
           </a>
         </div>
         <div className="rounded-[24px] overflow-hidden shadow-sm border border-[#f0c4d0]/20 md:col-span-7">

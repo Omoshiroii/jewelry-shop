@@ -20,8 +20,9 @@ const menuSections = [
   { label: 'PROMOTIONS', href: '/catalogue?filter=promotions', hasArrow: true },
 ]
 
-const WHATSAPP_NUMBER = '212600000000'
+const WHATSAPP_NUMBER = '+212 600-000000'
 const INSTAGRAM_URL = 'https://www.instagram.com/lilook51/'
+const TIKTOK_URL = 'https://www.tiktok.com/@lilook51?_r=1'
 
 interface MenuDrawerProps {
   isOpen: boolean
@@ -35,17 +36,15 @@ export default function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
     <>
       {/* Backdrop */}
       <div
-        className={`fixed inset-0 bg-[#1e1424]/40 backdrop-blur-sm z-[998] transition-opacity duration-500 ${
-          isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-        }`}
+        className={`fixed inset-0 bg-[#1e1424]/40 backdrop-blur-sm z-[998] transition-opacity duration-500 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          }`}
         onClick={onClose}
       />
 
       {/* Drawer Panel */}
       <div
-        className={`fixed top-0 left-0 h-full w-full max-w-[360px] z-[999] shadow-2xl transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed top-0 left-0 h-full w-full max-w-[360px] z-[999] shadow-2xl transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${isOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
         style={{
           background: 'linear-gradient(160deg, #fdf0f3 0%, #fff8fa 60%, #fdf0f3 100%)',
           willChange: 'transform'
@@ -87,9 +86,8 @@ export default function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
                 onMouseEnter={() => setHoveredItem(section.label)}
                 onMouseLeave={() => setHoveredItem(null)}
               >
-                <span className={`font-inter text-[12px] tracking-[2.5px] transition-all duration-300 ${
-                  hoveredItem === section.label ? 'text-[#d4849a] translate-x-1' : 'text-[#1e1424]'
-                }`}>
+                <span className={`font-inter text-[12px] tracking-[2.5px] transition-all duration-300 ${hoveredItem === section.label ? 'text-[#d4849a] translate-x-1' : 'text-[#1e1424]'
+                  }`}>
                   {section.label}
                 </span>
                 {section.hasArrow && (
@@ -114,9 +112,8 @@ export default function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
                 onMouseEnter={() => setHoveredItem(cat.value)}
                 onMouseLeave={() => setHoveredItem(null)}
               >
-                <span className={`font-inter text-[12px] tracking-[1.5px] transition-all duration-300 flex items-center gap-2 ${
-                  hoveredItem === cat.value ? 'text-[#d4849a] translate-x-1' : 'text-[#4a3550]'
-                }`}>
+                <span className={`font-inter text-[12px] tracking-[1.5px] transition-all duration-300 flex items-center gap-2 ${hoveredItem === cat.value ? 'text-[#d4849a] translate-x-1' : 'text-[#4a3550]'
+                  }`}>
                   {cat.label}
                 </span>
                 <ChevronRight size={13} strokeWidth={1.5} className={`text-[#d4849a] opacity-0 transition-all duration-300 ${hoveredItem === cat.value ? 'opacity-100 translate-x-1' : ''}`} />
@@ -134,7 +131,7 @@ export default function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
               onClick={onClose}
               className="flex items-center gap-3 text-[#4a3550] hover:text-[#d4849a] transition-colors duration-300"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" x2="17.51" y1="6.5" y2="6.5" /></svg>
               <span className="font-inter text-[12px] tracking-[1.5px]">@lilook51</span>
             </a>
 

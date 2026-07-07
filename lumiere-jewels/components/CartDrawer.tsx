@@ -143,7 +143,7 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
 
         {/* Footer */}
         {cart.length > 0 && (
-          <div className="p-6 border-t border-[#e5c5a4]/15 bg-white/40 backdrop-blur-md space-y-4">
+          <div className="p-6 pb-24 md:pb-6 border-t border-[#e5c5a4]/15 bg-white/40 backdrop-blur-md space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-xs tracking-[1px] uppercase text-[#8e7f74]">Total partiel</span>
               <span className="font-cormorant text-2xl font-bold text-[#2f2723]">

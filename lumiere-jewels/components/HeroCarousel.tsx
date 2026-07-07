@@ -13,7 +13,7 @@ const particles = [
 
 export default function HeroCarousel() {
   return (
-    <section className="relative w-full min-h-[92vh] md:min-h-screen bg-[#fdf0f3] flex flex-col md:flex-row items-stretch overflow-hidden">
+    <section className="relative w-full h-[100dvh] md:min-h-screen bg-[#fdf0f3] flex flex-col md:flex-row items-stretch overflow-hidden pt-[88px] md:pt-0">
       {/* Floating particles */}
       {particles.map((p, i) => (
         <div
@@ -32,7 +32,7 @@ export default function HeroCarousel() {
       ))}
 
       {/* Left: Photo */}
-      <div className="relative w-full md:w-1/2 min-h-[50vh] md:min-h-0 overflow-hidden group">
+      <div className="relative w-full md:w-1/2 h-[38%] md:h-auto overflow-hidden group">
         <img
           src="https://images.unsplash.com/photo-1617038220319-276d3cfab638?q=80&w=1200"
           alt="LILOOK Bijoux en acier inoxydable"
@@ -42,25 +42,25 @@ export default function HeroCarousel() {
         {/* Rose gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#1e1424]/30 via-transparent to-[#d4849a]/5 pointer-events-none" />
         {/* Corner accent */}
-        <div className="absolute bottom-6 left-6 text-white">
+        <div className="absolute bottom-4 left-4 text-white">
           <p className="text-[9px] tracking-[3px] uppercase text-white/70">Acier inoxydable · Waterproof</p>
         </div>
       </div>
 
       {/* Right: Content */}
-      <div className="w-full md:w-1/2 flex flex-col justify-center px-6 py-12 md:px-16 md:py-20 relative bg-[#fdf0f3]">
+      <div className="w-full md:w-1/2 flex-1 flex flex-col justify-center px-5 py-4 md:px-16 md:py-20 relative bg-[#fdf0f3]">
         {/* Background blobs */}
         <div className="absolute top-10 right-10 w-32 h-32 bg-[#d4849a]/8 rounded-full blur-3xl animate-float pointer-events-none" />
         <div className="absolute bottom-20 left-10 w-24 h-24 bg-[#f0c4d0]/15 rounded-full blur-2xl animate-float-slow pointer-events-none" />
 
         <div className="max-w-[460px] mx-auto w-full">
           {/* Brand pill */}
-          <div className="inline-flex items-center gap-2 bg-[#f5e4ea] border border-[#f0c4d0] rounded-full px-4 py-1.5 mb-6 animate-fade-in-up">
+          <div className="inline-flex items-center gap-2 bg-[#f5e4ea] border border-[#f0c4d0] rounded-full px-4 py-1.5 mb-3 md:mb-6 animate-fade-in-up">
             <span className="text-[9px] tracking-[2px] text-[#d4849a] uppercase font-inter">Bijoux · Acier inoxydable · Waterproof</span>
           </div>
 
           <h1
-            className="font-cormorant text-[3.2rem] md:text-[4.5rem] leading-[1] font-light text-[#1e1424] mb-6 animate-fade-in-up"
+            className="font-cormorant text-[2.4rem] md:text-[4.5rem] leading-[1] font-light text-[#1e1424] mb-3 md:mb-6 animate-fade-in-up"
             style={{ fontFamily: "'Cormorant Garamond', serif", animationDelay: '200ms', animationFillMode: 'both' }}
           >
             Des bijoux qui<br />
@@ -69,30 +69,30 @@ export default function HeroCarousel() {
           </h1>
 
           <p
-            className="text-[13px] md:text-[14px] leading-[1.8] text-[#4a3550] mb-8 font-inter animate-fade-in-up"
+            className="text-[12px] md:text-[14px] leading-[1.7] text-[#4a3550] mb-4 md:mb-8 font-inter animate-fade-in-up"
             style={{ animationDelay: '400ms', animationFillMode: 'both' }}
           >
-            Bijoux en acier inoxydable — résistants à l&apos;eau, qui ne noircissent pas et restent parfaits toute la journée. Inspirés de la féminité marocaine.
+            Bijoux en acier inoxydable — résistants à l&apos;eau, qui ne noircissent pas et restent parfaits toute la journée.
           </p>
 
           <div
-            className="flex flex-col sm:flex-row gap-3 animate-fade-in-up"
+            className="flex flex-col sm:flex-row gap-2 md:gap-3 animate-fade-in-up"
             style={{ animationDelay: '600ms', animationFillMode: 'both' }}
           >
             <Link href="/catalogue" className="flex-1 sm:flex-none">
-              <button className="w-full sm:px-8 py-4 bg-[#1e1424] text-white rounded-full text-[11px] tracking-[2px] uppercase font-inter hover:bg-[#d4849a] hover:shadow-lg hover:shadow-[#d4849a]/30 transition-all duration-300">
+              <button className="w-full sm:px-8 py-3 md:py-4 bg-[#1e1424] text-white rounded-full text-[11px] tracking-[2px] uppercase font-inter hover:bg-[#d4849a] hover:shadow-lg hover:shadow-[#d4849a]/30 transition-all duration-300">
                 Découvrir la collection
               </button>
             </Link>
             <Link href="/catalogue?filter=trending" className="flex-1 sm:flex-none">
-              <button className="w-full sm:px-8 py-4 bg-transparent border border-[#f0c4d0] text-[#1e1424] rounded-full text-[11px] tracking-[2px] uppercase font-inter hover:bg-[#d4849a] hover:text-white hover:border-[#d4849a] transition-all duration-300">
+              <button className="w-full sm:px-8 py-3 md:py-4 bg-transparent border border-[#f0c4d0] text-[#1e1424] rounded-full text-[11px] tracking-[2px] uppercase font-inter hover:bg-[#d4849a] hover:text-white hover:border-[#d4849a] transition-all duration-300">
                 Les tendances
               </button>
             </Link>
           </div>
 
           {/* Trust badges */}
-          <div className="flex items-center gap-6 mt-10 pt-8 border-t border-[#f0c4d0]/40 animate-fade-in-up" style={{ animationDelay: '800ms', animationFillMode: 'both' }}>
+          <div className="flex items-center gap-4 md:gap-6 mt-5 md:mt-10 pt-5 md:pt-8 border-t border-[#f0c4d0]/40 animate-fade-in-up" style={{ animationDelay: '800ms', animationFillMode: 'both' }}>
             {[
               { Icon: Droplets, label: 'Waterproof' },
               { Icon: Sparkles, label: 'Anti-ternissement' },

@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { X, CreditCard, Phone, MapPin, User } from 'lucide-react'
+import { X, ChevronDown } from 'lucide-react'
 import { createClient } from '@/lib/supabase'
 import { useCart } from '@/hooks/useCart'
 
@@ -10,20 +10,72 @@ type Props = {
   onClose: () => void
 }
 
+const MOROCCAN_CITIES = [
+  'Casablanca', 'Rabat', 'Fès', 'Marrakech', 'Tanger', 'Agadir', 'Meknès',
+  'Oujda', 'Kénitra', 'Tétouan', 'Safi', 'El Jadida', 'Nador', 'Béni Mellal',
+  'Mohammedia', 'Khouribga', 'Settat', 'Khémisset', 'Laâyoune', 'Berrechid',
+  'Taza', 'Larache', 'Salé', 'Temara', 'Inezgane', 'Berkane', 'Guelmim',
+  'Al Hoceïma', 'Dakhla', 'Ifrane', 'Essaouira', 'Ouarzazate', 'Errachidia',
+]
+
+const COUNTRY_CODES = [
+  { code: '+212', country: 'MA', flag: '🇲🇦' },
+  { code: '+33', country: 'FR', flag: '🇫🇷' },
+  { code: '+34', country: 'ES', flag: '🇪🇸' },
+  { code: '+32', country: 'BE', flag: '🇧🇪' },
+  { code: '+41', country: 'CH', flag: '🇨🇭' },
+  { code: '+1', country: 'US', flag: '🇺🇸' },
+  { code: '+44', country: 'GB', flag: '🇬🇧' },
+  { code: '+49', country: 'DE', flag: '🇩🇪' },
+  { code: '+39', country: 'IT', flag: '🇮🇹' },
+  { code: '+31', country: 'NL', flag: '🇳🇱' },
+  { code: '+213', country: 'DZ', flag: '🇩🇿' },
+  { code: '+216', country: 'TN', flag: '🇹🇳' },
+  { code: '+971', country: 'AE', flag: '🇦🇪' },
+  { code: '+966', country: 'SA', flag: '🇸🇦' },
+]
+
 export default function CheckoutModal({ isOpen, onClose }: Props) {
   const router = useRouter()
   const { cart, cartTotal, clearCart } = useCart()
   const [lastName, setLastName] = useState('')
   const [firstName, setFirstName] = useState('')
+  const [countryCode, setCountryCode] = useState('+212')
   const [phone, setPhone] = useState('')
   const [address, setAddress] = useState('')
   const [zipCode, setZipCode] = useState('')
   const [city, setCity] = useState('')
+  const [cityInput, setCityInput] = useState('')
+  const [citySuggestions, setCitySuggestions] = useState<string[]>([])
+  const [showCitySuggestions, setShowCitySuggestions] = useState(false)
   const [country, setCountry] = useState('Maroc')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [showCodePicker, setShowCodePicker] = useState(false)
 
   if (!isOpen) return null
+
+  function handleCityInput(val: string) {
+    setCityInput(val)
+    setCity(val)
+    if (val.length > 0) {
+      const suggestions = MOROCCAN_CITIES.filter(c =>
+        c.toLowerCase().startsWith(val.toLowerCase())
+      ).slice(0, 5)
+      setCitySuggestions(suggestions)
+      setShowCitySuggestions(suggestions.length > 0)
+    } else {
+      setCitySuggestions([])
+      setShowCitySuggestions(false)
+    }
+  }
+
+  function selectCity(c: string) {
+    setCity(c)
+    setCityInput(c)
+    setCitySuggestions([])
+    setShowCitySuggestions(false)
+  }
 
   async function handleCheckout(e: React.FormEvent) {
     e.preventDefault()
@@ -39,7 +91,7 @@ export default function CheckoutModal({ isOpen, onClose }: Props) {
       const supabase = createClient()
       const orderPayload = {
         customer_name: `${firstName} ${lastName}`,
-        customer_phone: phone,
+        customer_phone: `${countryCode} ${phone}`,
         customer_address: address,
         customer_city: city,
         customer_zip: zipCode || null,
@@ -66,7 +118,6 @@ export default function CheckoutModal({ isOpen, onClose }: Props) {
         throw insertError
       }
 
-      // Success
       clearCart()
       onClose()
       router.push(`/commande-confirmee?id=${data.id}`)
@@ -123,16 +174,14 @@ export default function CheckoutModal({ isOpen, onClose }: Props) {
               <label className="block text-[10px] tracking-[2px] uppercase text-[#8e7f74] font-inter mb-1.5">
                 Prénom *
               </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  required
-                  value={firstName}
-                  onChange={e => setFirstName(e.target.value)}
-                  placeholder="Sarah"
-                  className="w-full bg-[#f7f2ec]/50 border border-[#e5c5a4]/30 rounded-xl pl-4 pr-4 py-2.5 text-xs text-[#2f2723] font-inter outline-none focus:border-[#c8a27b] transition-colors"
-                />
-              </div>
+              <input
+                type="text"
+                required
+                value={firstName}
+                onChange={e => setFirstName(e.target.value)}
+                placeholder="Sarah"
+                className="w-full bg-[#f7f2ec]/50 border border-[#e5c5a4]/30 rounded-xl pl-4 pr-4 py-2.5 text-xs text-[#2f2723] font-inter outline-none focus:border-[#c8a27b] transition-colors"
+              />
             </div>
             <div>
               <label className="block text-[10px] tracking-[2px] uppercase text-[#8e7f74] font-inter mb-1.5">
@@ -143,28 +192,52 @@ export default function CheckoutModal({ isOpen, onClose }: Props) {
                 required
                 value={lastName}
                 onChange={e => setLastName(e.target.value)}
-                placeholder="El alami"
+                placeholder="El Alami"
                 className="w-full bg-[#f7f2ec]/50 border border-[#e5c5a4]/30 rounded-xl px-4 py-2.5 text-xs text-[#2f2723] font-inter outline-none focus:border-[#c8a27b] transition-colors"
               />
             </div>
           </div>
 
-          {/* Phone */}
+          {/* Phone with country code */}
           <div>
             <label className="block text-[10px] tracking-[2px] uppercase text-[#8e7f74] font-inter mb-1.5">
               Téléphone *
             </label>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xs text-[#8e7f74] border-r border-[#e5c5a4]/30 pr-2">
-                +212
-              </span>
+            <div className="flex gap-2">
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setShowCodePicker(!showCodePicker)}
+                  className="flex items-center gap-1.5 bg-[#f7f2ec]/50 border border-[#e5c5a4]/30 rounded-xl px-3 py-2.5 text-xs text-[#2f2723] font-inter outline-none focus:border-[#c8a27b] transition-colors whitespace-nowrap"
+                >
+                  <span>{COUNTRY_CODES.find(c => c.code === countryCode)?.flag}</span>
+                  <span>{countryCode}</span>
+                  <ChevronDown size={12} className="text-[#8e7f74]" />
+                </button>
+                {showCodePicker && (
+                  <div className="absolute top-full left-0 mt-1 w-44 bg-white rounded-xl shadow-lg border border-[#e5c5a4]/30 z-10 max-h-48 overflow-y-auto hide-scrollbar">
+                    {COUNTRY_CODES.map(c => (
+                      <button
+                        key={c.code}
+                        type="button"
+                        onClick={() => { setCountryCode(c.code); setShowCodePicker(false) }}
+                        className="w-full flex items-center gap-2 px-3 py-2 text-xs text-[#2f2723] hover:bg-[#f7f2ec] transition-colors"
+                      >
+                        <span>{c.flag}</span>
+                        <span>{c.code}</span>
+                        <span className="text-[#8e7f74]">{c.country}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
               <input
                 type="tel"
                 required
                 value={phone}
                 onChange={e => setPhone(e.target.value)}
                 placeholder="6 12 34 56 78"
-                className="w-full bg-[#f7f2ec]/50 border border-[#e5c5a4]/30 rounded-xl pl-16 pr-4 py-2.5 text-xs text-[#2f2723] font-inter outline-none focus:border-[#c8a27b] transition-colors"
+                className="flex-1 bg-[#f7f2ec]/50 border border-[#e5c5a4]/30 rounded-xl px-4 py-2.5 text-xs text-[#2f2723] font-inter outline-none focus:border-[#c8a27b] transition-colors"
               />
             </div>
           </div>
@@ -184,20 +257,37 @@ export default function CheckoutModal({ isOpen, onClose }: Props) {
             />
           </div>
 
-          {/* City / Zip */}
+          {/* City with autocomplete / Zip */}
           <div className="grid grid-cols-2 gap-3">
-            <div>
+            <div className="relative">
               <label className="block text-[10px] tracking-[2px] uppercase text-[#8e7f74] font-inter mb-1.5">
                 Ville *
               </label>
               <input
                 type="text"
                 required
-                value={city}
-                onChange={e => setCity(e.target.value)}
+                value={cityInput}
+                onChange={e => handleCityInput(e.target.value)}
+                onBlur={() => setTimeout(() => setShowCitySuggestions(false), 150)}
+                onFocus={() => cityInput && setCitySuggestions(MOROCCAN_CITIES.filter(c => c.toLowerCase().startsWith(cityInput.toLowerCase())).slice(0, 5))}
                 placeholder="Casablanca"
+                autoComplete="off"
                 className="w-full bg-[#f7f2ec]/50 border border-[#e5c5a4]/30 rounded-xl px-4 py-2.5 text-xs text-[#2f2723] font-inter outline-none focus:border-[#c8a27b] transition-colors"
               />
+              {showCitySuggestions && citySuggestions.length > 0 && (
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-xl shadow-lg border border-[#e5c5a4]/30 z-10 overflow-hidden">
+                  {citySuggestions.map(s => (
+                    <button
+                      key={s}
+                      type="button"
+                      onMouseDown={() => selectCity(s)}
+                      className="w-full text-left px-4 py-2 text-xs text-[#2f2723] hover:bg-[#f7f2ec] transition-colors"
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             <div>
               <label className="block text-[10px] tracking-[2px] uppercase text-[#8e7f74] font-inter mb-1.5">

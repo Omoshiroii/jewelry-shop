@@ -4,7 +4,7 @@
 // Change WHATSAPP_NUMBER to the owner's real number
 // Change SITE_URL to the production domain when deploying
 
-export const WHATSAPP_NUMBER = '212600000000'
+export const WHATSAPP_NUMBER = '+212 600-000000'
 export const SITE_URL = typeof window !== 'undefined' ? window.location.origin : 'https://lilook.ma'
 
 export const COUNTRIES = [

@@ -39,7 +39,8 @@ function CatalogueContent() {
 
   useEffect(() => {
     fetchProducts()
-  }, [])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterParam, sortParam])
 
   async function fetchProducts() {
     setLoading(true)
@@ -140,8 +141,8 @@ function CatalogueContent() {
 
   return (
     <div className="min-h-screen bg-[#f7f2ec] font-inter" style={{ fontFamily: "'Inter', sans-serif" }}>
-      {/* Spacer for fixed navbar */}
-      <div className="h-16" />
+      {/* Spacer for fixed navbar (AnnouncementBar 32px + nav ~56px) */}
+      <div className="h-[90px]" />
 
       {/* Header */}
       <div className="px-6 pt-4 pb-6">

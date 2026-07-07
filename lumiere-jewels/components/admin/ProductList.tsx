@@ -1,5 +1,4 @@
 'use client'
-import Image from 'next/image'
 import { Pencil, Trash2, TrendingUp } from 'lucide-react'
 import { Product } from '@/types'
 import { formatPrice, getSalePrice, hasDiscount } from '@/lib/utils'
@@ -32,11 +31,12 @@ export default function ProductList({ products, onEdit, onDelete }: Props) {
             key={product.id}
             className="bg-white rounded-2xl border border-rose-light p-3 flex items-center gap-3"
           >
-            <div className="w-14 h-14 rounded-xl overflow-hidden bg-rose-pale flex-shrink-0 relative">
+            <div className="w-14 h-14 rounded-xl overflow-hidden bg-rose-pale flex-shrink-0">
               {imageUrl ? (
-                <Image src={imageUrl} alt={product.title} fill className="object-cover" />
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={imageUrl} alt={product.title} className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full bg-rose-pale" />
+                <div className="w-full h-full bg-rose-pale flex items-center justify-center text-[#d4849a] text-xl">💎</div>
               )}
             </div>
 

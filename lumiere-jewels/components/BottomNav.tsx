@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation'
 import { Home, Grid2X2, Heart, Phone } from 'lucide-react'
 import { useFavorites } from '@/hooks/useFavorites'
 
-const WHATSAPP_NUMBER = '212600000000'
+const WHATSAPP_NUMBER = '+212 600-000000'
 
 const links = [
   { href: '/', label: 'Accueil', icon: Home },
@@ -45,9 +45,8 @@ export default function BottomNav() {
                 )}
               </div>
               <span
-                className={`text-[9px] tracking-wide uppercase font-inter ${
-                  active ? 'text-[#c8a27b]' : 'text-[#8e7f74]'
-                }`}
+                className={`text-[9px] tracking-wide uppercase font-inter ${active ? 'text-[#c8a27b]' : 'text-[#8e7f74]'
+                  }`}
               >
                 {label}
               </span>

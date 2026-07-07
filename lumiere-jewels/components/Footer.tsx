@@ -2,8 +2,9 @@
 import Link from 'next/link'
 import { MapPin, Phone, Mail, Heart } from 'lucide-react'
 
-const WHATSAPP_NUMBER = '212600000000'
+const WHATSAPP_NUMBER = '+212 600-000000'
 const INSTAGRAM_URL = 'https://www.instagram.com/lilook51/'
+const TIKTOK_URL = 'https://www.tiktok.com/@lilook51?_r=1'
 
 export default function Footer() {
   return (
@@ -47,11 +48,11 @@ export default function Footer() {
           <div className="border-t border-[#2d1f35] pt-8 mb-8 space-y-4">
             <div className="flex items-center gap-3">
               <MapPin size={16} strokeWidth={1.5} className="text-[#d4849a] flex-shrink-0" />
-              <span className="text-[13px] text-[#9b6b7f]">Casablanca, Maroc</span>
+              <span className="text-[13px] text-[#9b6b7f]">Tanger, Maroc</span>
             </div>
             <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 group">
               <Phone size={16} strokeWidth={1.5} className="text-[#d4849a] flex-shrink-0" />
-              <span className="text-[13px] text-[#9b6b7f] group-hover:text-white transition-colors">+212 6 00 00 00 00</span>
+              <span className="text-[13px] text-[#9b6b7f] group-hover:text-white transition-colors">+212 694443182</span>
             </a>
             <div className="flex items-center gap-3">
               <Mail size={16} strokeWidth={1.5} className="text-[#d4849a] flex-shrink-0" />
@@ -60,15 +61,26 @@ export default function Footer() {
           </div>
 
           <div className="border-t border-[#2d1f35] pt-6">
-            <a
-              href={INSTAGRAM_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full py-3 mb-6 rounded-full border border-[#d4849a]/30 hover:bg-[#d4849a]/10 hover:border-[#d4849a] transition-all duration-300 group"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-[#d4849a]"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
-              <span className="text-[11px] tracking-[2px] text-[#d4849a] uppercase font-inter group-hover:text-white transition-colors">@lilook51</span>
-            </a>
+            <div className="flex gap-3 mb-6">
+              <a
+                href={INSTAGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 flex-1 py-3 rounded-full border border-[#d4849a]/30 hover:bg-[#d4849a]/10 hover:border-[#d4849a] transition-all duration-300 group"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-[#d4849a]"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" x2="17.51" y1="6.5" y2="6.5" /></svg>
+                <span className="text-[11px] tracking-[2px] text-[#d4849a] uppercase font-inter group-hover:text-white transition-colors">Instagram</span>
+              </a>
+              <a
+                href={TIKTOK_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 flex-1 py-3 rounded-full border border-[#d4849a]/30 hover:bg-[#d4849a]/10 hover:border-[#d4849a] transition-all duration-300 group"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="text-[#d4849a]"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.17 8.17 0 0 0 4.77 1.52V6.76a4.85 4.85 0 0 1-1-.07z" /></svg>
+                <span className="text-[11px] tracking-[2px] text-[#d4849a] uppercase font-inter group-hover:text-white transition-colors">TikTok</span>
+              </a>
+            </div>
             <p className="text-center text-[10px] text-[#4a3550] tracking-[1px]">© 2026 LILOOK. Tous droits réservés.</p>
             <p className="text-center text-[10px] text-[#4a3550] mt-2 flex items-center justify-center gap-1">
               Fait avec <Heart size={10} className="text-[#d4849a] fill-[#d4849a]" /> au Maroc
