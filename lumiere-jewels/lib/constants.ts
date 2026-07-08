@@ -7,6 +7,9 @@
 export const WHATSAPP_NUMBER = '+212 600-000000'
 export const SITE_URL = typeof window !== 'undefined' ? window.location.origin : 'https://lilook.ma'
 
+/** Main homepage hero background image — replace this URL to change the photo */
+export const HERO_IMAGE_URL = '/mainhero.png'
+
 export const COUNTRIES = [
   'Maroc',
   'France',

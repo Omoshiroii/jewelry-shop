@@ -12,12 +12,12 @@ const collections = [
 export default function CollectionGrid() {
   const { ref: titleRef, isVisible: titleVisible } = useScrollReveal()
   return (
-    <section id="collections" className="px-5 py-20">
-      <div ref={titleRef} className={`mb-12 transition-all duration-700 ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+    <section id="collections" className="px-4 py-16 md:px-5 md:py-20">
+      <div ref={titleRef} className={`mb-8 md:mb-10 transition-all duration-700 ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
         <span className="text-[10px] tracking-[3px] text-[#88292F] uppercase block mb-2">nos collections</span>
         <h2 className="font-cormorant text-[2.8rem] font-medium leading-none text-[#2e1e0f]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Explorer par<br />Catégorie</h2>
       </div>
-      <div className="grid grid-cols-2 gap-3 md:gap-4">
+      <div className="grid grid-cols-2 grid-flow-dense gap-1.5 md:gap-2 auto-rows-[130px] md:auto-rows-[160px]">
         {collections.map((col, index) => (
           <CollectionCard key={col.title} collection={col} index={index} />
         ))}
@@ -26,20 +26,24 @@ export default function CollectionGrid() {
   )
 }
 
-function CollectionCard({ collection, index }) {
+function CollectionCard({ collection, index }: { collection: typeof collections[number]; index: number }) {
   const { ref, isVisible } = useScrollReveal({ threshold: 0.1 })
   const isLarge = collection.size === 'large'
   return (
-    <div ref={ref} className={`relative overflow-hidden rounded-[24px] group cursor-pointer transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} ${isLarge ? 'row-span-2 aspect-[3/4]' : 'aspect-square'}`} style={{ transitionDelay: `${index * 100}ms` }}>
+    <div
+      ref={ref}
+      className={`relative overflow-hidden rounded-[16px] md:rounded-[20px] group cursor-pointer transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} ${isLarge ? 'row-span-2' : 'row-span-1'}`}
+      style={{ transitionDelay: `${index * 100}ms` }}
+    >
       <Link href={collection.href} className="block w-full h-full">
         <img src={collection.image} alt={collection.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" loading="lazy" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
         <div className="absolute top-0 left-0 right-0 h-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ backgroundColor: collection.color }} />
-        <div className="absolute bottom-0 left-0 right-0 p-5">
-          <h3 className="font-cormorant text-[1.8rem] text-white font-medium mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{collection.title}</h3>
-          <p className="text-[12px] text-white/70 tracking-wide">{collection.subtitle}</p>
+        <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4">
+          <h3 className="font-cormorant text-[1.4rem] md:text-[1.8rem] text-white font-medium mb-0.5" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{collection.title}</h3>
+          <p className="text-[10px] md:text-[12px] text-white/70 tracking-wide">{collection.subtitle}</p>
         </div>
-        <div className="absolute inset-0 border-2 border-white/0 group-hover:border-white/30 rounded-[24px] transition-all duration-500" />
+        <div className="absolute inset-0 border-2 border-white/0 group-hover:border-white/30 rounded-[16px] md:rounded-[20px] transition-all duration-500" />
       </Link>
     </div>
   )
