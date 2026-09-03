@@ -1,7 +1,6 @@
 'use client'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase'
-import Link from 'next/link'
 import HeroCarousel from '@/components/HeroCarousel'
 import CollectionGrid from '@/components/CollectionGrid'
 import StorySection from '@/components/StorySection'
@@ -32,19 +31,18 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true)
   const [activeCategory, setActiveCategory] = useState('tout')
 
-  const fetchProducts = useCallback(async () => {
-    setLoading(true)
-    const supabase = createClient()
-    const { data: allData } = await supabase.from('products').select('*').order('created_at', { ascending: false })
-    const { data: likedData } = await supabase.from('products').select('*').order('favorites_count', { ascending: false }).limit(8)
-    if (allData) setAllProducts(allData)
-    if (likedData) setMostLiked(likedData)
-    setLoading(false)
-  }, [])
-
   useEffect(() => {
+    async function fetchProducts() {
+      const supabase = createClient()
+      const { data: allData } = await supabase.from('products').select('*').order('created_at', { ascending: false })
+      const { data: likedData } = await supabase.from('products').select('*').order('favorites_count', { ascending: false }).limit(8)
+      if (allData) setAllProducts(allData)
+      if (likedData) setMostLiked(likedData)
+      setLoading(false)
+    }
+
     fetchProducts()
-  }, [fetchProducts])
+  }, [])
 
   const filtered = activeCategory === 'tout'
     ? allProducts

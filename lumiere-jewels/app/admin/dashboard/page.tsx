@@ -16,7 +16,6 @@ import {
   ChevronDown,
   ChevronUp,
   Search,
-  Phone,
   MapPin,
   ExternalLink,
   LogOut,
@@ -28,6 +27,7 @@ import {
   Check,
   FolderOpen
 } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { formatPrice } from '@/lib/utils'
 
 type OrderItem = {
@@ -71,7 +71,7 @@ type DBConfigCategory = {
   display_order: number
 }
 
-const STATUS_MAP: Record<string, { label: string; color: string; bg: string; icon: any }> = {
+const STATUS_MAP: Record<string, { label: string; color: string; bg: string; icon: LucideIcon }> = {
   pending: { label: 'En attente', color: '#d97706', bg: 'rgba(217,119,6,0.08)', icon: Clock },
   confirmed: { label: 'Confirmée', color: '#059669', bg: 'rgba(5,150,105,0.08)', icon: CheckCircle },
   shipped: { label: 'Expédiée', color: '#2563eb', bg: 'rgba(37,99,235,0.08)', icon: Truck },
@@ -226,7 +226,6 @@ export default function DashboardPage() {
   const [orders, setOrders] = useState<Order[]>([])
   const [views, setViews] = useState<PageView[]>([])
   const [dbCategories, setDbCategories] = useState<DBConfigCategory[]>([])
-  const [loading, setLoading] = useState(true)
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null)
   const [showForm, setShowForm] = useState(false)
   const [editProduct, setEditProduct] = useState<Product | undefined>()
@@ -253,7 +252,6 @@ export default function DashboardPage() {
   const [migrationError, setMigrationError] = useState(false)
 
   const loadAllData = useCallback(async () => {
-    setLoading(true)
     setMigrationError(false)
     const supabase = createClient()
 
@@ -308,13 +306,12 @@ export default function DashboardPage() {
         setMigrationError(true)
       }
 
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Database loading error:', err)
-      if (err.message?.includes('public.orders') || err.message?.includes('public.page_views') || err.code === '42P01') {
+      const message = err instanceof Error ? err.message : ''
+      if (message.includes('public.orders') || message.includes('public.page_views')) {
         setMigrationError(true)
       }
-    } finally {
-      setLoading(false)
     }
   }, [])
 
@@ -387,7 +384,7 @@ export default function DashboardPage() {
       setNewCatSlug('')
       setNewCatOrder('0')
       loadAllData()
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err)
       alert('Erreur lors de la création de la catégorie. Assurez-vous que le slug est unique.')
     } finally {
@@ -444,10 +441,6 @@ export default function DashboardPage() {
   views.forEach(v => {
     viewsByPath[v.page_path] = (viewsByPath[v.page_path] || 0) + 1
   })
-  const sortedPaths = Object.entries(viewsByPath)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
-
   const filteredOrders = orders.filter(order => {
     const matchesSearch =
       order.customer_name.toLowerCase().includes(orderSearch.toLowerCase()) ||
@@ -810,7 +803,7 @@ export default function DashboardPage() {
               <div className="flex gap-2">
                 <select
                   value={orderFilter}
-                  onChange={e => setOrderFilter(e.target.value as any)}
+                  onChange={e => setOrderFilter(e.target.value as typeof orderFilter)}
                   className="bg-white border border-[#f0c4d0]/40 rounded-xl px-3 py-2 text-xs text-[#1e1424] font-inter outline-none cursor-pointer"
                 >
                   <option value="all">Tous les statuts</option>
@@ -829,7 +822,7 @@ export default function DashboardPage() {
                 {[
                   { id: '4a6b2c8e', name: 'Salma Alami', phone: '+212612345678', price: 450, status: 'pending', date: 'Aujourd\'hui, 14:32', items: [{ title: 'Bague Jasmine ✨', price: 150, quantity: 1 }, { title: 'Collier Royal 📿', price: 300, quantity: 1 }] },
                   { id: '2f8e1a9d', name: 'Nisrine Bennani', phone: '+212698765432', price: 290, status: 'confirmed', date: 'Hier, 18:15', items: [{ title: 'Bracelet Minimaliste 🧿', price: 290, quantity: 1 }] },
-                ].map((mockOrder: any) => {
+                ].map((mockOrder) => {
                   const status = STATUS_MAP[mockOrder.status] || STATUS_MAP.pending
                   const isExpanded = expandedOrderId === mockOrder.id
                   return (
@@ -858,7 +851,7 @@ export default function DashboardPage() {
                         <div className="border-t border-[#fdf0f3] bg-[#fdf0f3]/20 p-5 space-y-4">
                           <div className="bg-white rounded-2xl border border-[#f0c4d0]/20 p-4 space-y-3">
                             <span className="text-[8px] tracking-[1.5px] uppercase text-[#d4849a] font-bold block">Détail des pièces (Exemple)</span>
-                            {mockOrder.items.map((item: any, idx: number) => (
+                            {mockOrder.items.map((item, idx) => (
                               <div key={idx} className="flex justify-between items-center text-xs">
                                 <div>
                                   <p className="text-[#1e1424] font-semibold">{item.title}</p>

@@ -152,7 +152,7 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
             </div>
             
             <p className="text-[11px] text-[#8e7f74] text-center leading-relaxed">
-              Frais de livraison gratuits dans tout le Maroc. Paiement à la livraison.
+              Frais de livraison Fiablets dans tout le Maroc. Paiement à la livraison.
             </p>
 
             <button

@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { Loader2, ArrowLeft, Package, MapPin, Phone, User, Calendar, Hash } from 'lucide-react'
+import { Loader2, ArrowLeft, Package, MapPin, Phone, User, Hash } from 'lucide-react'
 import { createClient } from '@/lib/supabase'
 import { formatPrice } from '@/lib/utils'
 

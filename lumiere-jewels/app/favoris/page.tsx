@@ -14,43 +14,41 @@ export default function FavoritesPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (favorites.length > 0) {
-      fetchFavoriteProducts()
-    } else {
-      setProducts([])
+    if (favorites.length === 0) return
+
+    async function fetchFavoriteProducts() {
+      setLoading(true)
+      const supabase = createClient()
+
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .in('id', favorites)
+
+      if (error) {
+        console.error('Error fetching favorites:', error)
+        setLoading(false)
+        return
+      }
+
+      if (data) {
+        const ordered = favorites
+          .map(id => data.find(p => p.id === id))
+          .filter((p): p is Product => p !== undefined)
+        setProducts(ordered)
+      }
       setLoading(false)
     }
+
+    fetchFavoriteProducts()
   }, [favorites])
 
-  async function fetchFavoriteProducts() {
-    setLoading(true)
-    const supabase = createClient()
-
-    // Fetch all favorite products
-    const { data, error } = await supabase
-      .from('products')
-      .select('*')
-      .in('id', favorites)
-
-    if (error) {
-      console.error('Error fetching favorites:', error)
-      setLoading(false)
-      return
-    }
-
-    if (data) {
-      // Maintain the order based on favorites array (newest first)
-      const ordered = favorites
-        .map(id => data.find(p => p.id === id))
-        .filter((p): p is Product => p !== undefined)
-      setProducts(ordered)
-    }
-    setLoading(false)
-  }
+  const visibleProducts = favorites.length === 0 ? [] : products
+  const isLoading = favorites.length > 0 && loading
 
   const productPairs = []
-  for (let i = 0; i < products.length; i += 2) {
-    productPairs.push(products.slice(i, i + 2))
+  for (let i = 0; i < visibleProducts.length; i += 2) {
+    productPairs.push(visibleProducts.slice(i, i + 2))
   }
 
   return (
@@ -80,11 +78,11 @@ export default function FavoritesPage() {
       </div>
 
       <div className="px-5 pb-32">
-        {loading ? (
+        {isLoading ? (
           <div className="text-center py-16">
             <div className="w-6 h-6 border-2 border-[#c8a27b] border-t-transparent rounded-full animate-spin mx-auto" />
           </div>
-        ) : products.length === 0 ? (
+        ) : visibleProducts.length === 0 ? (
           <div className="text-center py-20">
             <Heart size={48} strokeWidth={1} className="text-[#e8e0d8] mx-auto mb-4" />
             <p className="font-cormorant text-2xl text-[#c8a27b] mb-3">Aucun favori</p>

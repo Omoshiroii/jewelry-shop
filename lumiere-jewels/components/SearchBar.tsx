@@ -10,7 +10,6 @@ interface SearchBarProps {
 
 export default function SearchBar({ isOpen, onClose }: SearchBarProps) {
   const [query, setQuery] = useState('')
-  const [suggestions, setSuggestions] = useState<string[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
 

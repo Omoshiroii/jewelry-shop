@@ -121,7 +121,7 @@ export default function CheckoutModal({ isOpen, onClose }: Props) {
       clearCart()
       onClose()
       router.push(`/commande-confirmee?id=${orderId}`)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Checkout error:', err)
       setError('Une erreur est survenue lors de la validation. Veuillez réessayer.')
     } finally {

@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
 
 export default function AdminLogin() {
@@ -51,17 +52,17 @@ export default function AdminLogin() {
       <div style={{ width: '100%', maxWidth: '400px', position: 'relative' }}>
         {/* Clickable Logo → back to homepage */}
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <a href="/" style={{ textDecoration: 'none', display: 'inline-block' }}>
+          <Link href="/" style={{ textDecoration: 'none', display: 'inline-block' }}>
             <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '36px', fontWeight: 500, letterSpacing: '6px', color: '#1e1424', transition: 'color 0.3s' }}
               onMouseEnter={e => (e.currentTarget.style.color = '#d4849a')}
               onMouseLeave={e => (e.currentTarget.style.color = '#1e1424')}
             >LILOOK</h1>
-          </a>
+          </Link>
           <p style={{ fontSize: '10px', letterSpacing: '2px', color: '#d4849a', textTransform: 'uppercase', marginTop: '6px' }}>
             💍 Bijoux en acier ✨ inoxydable & waterproof 🫧
           </p>
           <p style={{ fontSize: '10px', letterSpacing: '1px', color: '#9b6b7f', marginTop: '6px' }}>
-            ← <a href="/" style={{ color: '#9b6b7f', textDecoration: 'underline' }}>Retour au site</a>
+            ← <Link href="/" style={{ color: '#9b6b7f', textDecoration: 'underline' }}>Retour au site</Link>
           </p>
         </div>
 

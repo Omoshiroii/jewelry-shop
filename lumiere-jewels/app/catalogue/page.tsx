@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
 import { Product } from '@/types'
 import ProductCard from '@/components/ProductCard'
@@ -22,20 +21,16 @@ const categories = [
 function CatalogueContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
+  const categoryParam = searchParams.get('category') || ''
   const [products, setProducts] = useState<Product[]>([])
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
-  const [activeCategory, setActiveCategory] = useState('tout')
+  const [activeCategory, setActiveCategory] = useState(() => categoryParam || 'tout')
   const [showFilters, setShowFilters] = useState(false)
 
   const query = searchParams.get('q') || ''
   const sortParam = searchParams.get('sort') || ''
   const filterParam = searchParams.get('filter') || ''
-  const categoryParam = searchParams.get('category') || ''
-
-  useEffect(() => {
-    if (categoryParam) setActiveCategory(categoryParam)
-  }, [categoryParam])
 
   useEffect(() => {
     fetchProducts()

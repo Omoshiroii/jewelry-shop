@@ -97,7 +97,7 @@ export default function HeroCarousel() {
             {[
               { Icon: Droplets, label: 'Waterproof' },
               { Icon: Sparkles, label: 'Anti-ternissement' },
-              { Icon: Truck, label: 'Livraison gratuite' },
+              { Icon: Truck, label: 'Livraison Fiable' },
             ].map(({ Icon, label }) => (
               <div key={label} className="flex flex-col items-center gap-1.5">
                 <Icon size={16} className="text-[#d4849a]" strokeWidth={1.5} />

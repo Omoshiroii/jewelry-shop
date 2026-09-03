@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, ChevronDown, ChevronUp, ShoppingBag, Loader2, MapPin, User, Phone, Building2, Package } from 'lucide-react'
+import { ArrowLeft, ChevronDown, ChevronUp, ShoppingBag, Loader2, MapPin, Phone, Package } from 'lucide-react'
 import { createClient } from '@/lib/supabase'
 import { useCart } from '@/hooks/useCart'
 import { formatPrice } from '@/lib/utils'
@@ -102,7 +102,7 @@ export default function CheckoutPage() {
       
       // Navigate to confirmation page
       router.push(`/commande-confirmee?id=${orderId}`)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Checkout error:', err)
       setError('Une erreur est survenue. Veuillez réessayer.')
     } finally {

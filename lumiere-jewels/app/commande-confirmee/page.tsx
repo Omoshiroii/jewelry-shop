@@ -32,11 +32,10 @@ function OrderConfirmationContent() {
   const router = useRouter()
   const orderId = searchParams.get('id')
   const [order, setOrder] = useState<Order | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(Boolean(orderId))
 
   useEffect(() => {
     if (!orderId) {
-      setLoading(false)
       return
     }
 
