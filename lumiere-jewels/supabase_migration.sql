@@ -102,6 +102,10 @@ INSERT INTO public.admin_users (user_id)
 SELECT id FROM auth.users ORDER BY created_at ASC LIMIT 1
 ON CONFLICT (user_id) DO NOTHING;
 
+-- Manage the allowlist from the SQL Editor when ownership changes:
+-- GRANT: INSERT INTO public.admin_users (user_id) VALUES ('AUTH-USER-UUID');
+-- REVOKE: DELETE FROM public.admin_users WHERE user_id = 'AUTH-USER-UUID';
+
 CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS boolean
 LANGUAGE sql

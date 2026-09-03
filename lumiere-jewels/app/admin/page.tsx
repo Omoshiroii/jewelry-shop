@@ -18,9 +18,18 @@ export default function AdminLogin() {
     if (error) {
       setError('Email ou mot de passe incorrect')
       setLoading(false)
-    } else {
-      router.push('/admin/dashboard')
+      return
     }
+
+    const { data: isAdmin, error: authorizationError } = await supabase.rpc('is_admin')
+    if (authorizationError || !isAdmin) {
+      await supabase.auth.signOut()
+      setError('Ce compte n’est pas autorisé à accéder à l’administration')
+      setLoading(false)
+      return
+    }
+
+    router.replace('/admin/dashboard')
   }
 
   return (

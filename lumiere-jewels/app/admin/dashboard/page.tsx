@@ -169,6 +169,10 @@ INSERT INTO public.admin_users (user_id)
 SELECT id FROM auth.users ORDER BY created_at ASC LIMIT 1
 ON CONFLICT (user_id) DO NOTHING;
 
+-- Manage the allowlist from the SQL Editor:
+-- INSERT INTO public.admin_users (user_id) VALUES ('AUTH-USER-UUID');
+-- DELETE FROM public.admin_users WHERE user_id = 'AUTH-USER-UUID';
+
 CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path = '' AS $$
   SELECT EXISTS (SELECT 1 FROM public.admin_users WHERE user_id = auth.uid());
@@ -223,6 +227,7 @@ export default function DashboardPage() {
   const [views, setViews] = useState<PageView[]>([])
   const [dbCategories, setDbCategories] = useState<DBConfigCategory[]>([])
   const [loading, setLoading] = useState(true)
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null)
   const [showForm, setShowForm] = useState(false)
   const [editProduct, setEditProduct] = useState<Product | undefined>()
   const [tab, setTab] = useState<'overview' | 'products' | 'orders' | 'categories'>('overview')
@@ -316,11 +321,25 @@ export default function DashboardPage() {
   useEffect(() => {
     async function checkAuth() {
       const supabase = createClient()
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) router.push('/admin')
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+      if (userError || !user) {
+        setIsAuthorized(false)
+        router.replace('/admin')
+        return
+      }
+
+      const { data: isAdmin, error: authorizationError } = await supabase.rpc('is_admin')
+      if (authorizationError || !isAdmin) {
+        await supabase.auth.signOut()
+        setIsAuthorized(false)
+        router.replace('/admin')
+        return
+      }
+
+      setIsAuthorized(true)
+      await loadAllData()
     }
     checkAuth()
-    loadAllData()
   }, [loadAllData, router])
 
   async function updateOrderStatus(orderId: string, status: Order['status']) {
@@ -490,6 +509,14 @@ export default function DashboardPage() {
       const product = products.find(p => p.id === productId)
       return { path, productId, title: product?.title || path, count }
     })
+
+  if (isAuthorized !== true) {
+    return (
+      <div className="min-h-screen bg-[#fdf0f3] flex items-center justify-center">
+        <div className="w-7 h-7 rounded-full border-2 border-[#f0c4d0] border-t-[#d4849a] animate-spin" />
+      </div>
+    )
+  }
 
   return (
     <div style={{ background: '#fdf0f3', minHeight: '100vh', fontFamily: 'Inter, sans-serif' }}>
