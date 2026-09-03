@@ -6,7 +6,7 @@ const collections = [
   { title: 'Bagues', subtitle: 'Élégance au bout des doigts', image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=800', href: '/catalogue?category=bagues', size: 'large', color: '#88292F' },
   { title: 'Colliers', subtitle: 'Autour du cou, avec âme', image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=800', href: '/catalogue?category=colliers', size: 'small', color: '#A27E8E' },
   { title: 'Bracelets', subtitle: 'Des poignets sublimés', image: 'https://images.unsplash.com/photo-1611652022419-a9419f74343d?q=80&w=800', href: '/catalogue?category=bracelets', size: 'small', color: '#A77464' },
-  { title: 'Traditionnel', subtitle: "L'héritage marocain", image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=800', href: '/catalogue?category=traditionnel', size: 'large', color: '#4D6A6D' },
+  { title: 'Tendances', subtitle: 'Les pièces du moment', image: '/pink.jpg', href: '/catalogue?filter=trending', size: 'large', color: '#A34F69' },
 ]
 
 export default function CollectionGrid() {

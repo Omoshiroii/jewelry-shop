@@ -1,249 +1,82 @@
 'use client'
-import { useState, useEffect } from 'react'
+
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { ArrowUpRight } from 'lucide-react'
 import { createClient } from '@/lib/supabase'
+import type { Product } from '@/types'
 import HeroCarousel from '@/components/HeroCarousel'
 import CollectionGrid from '@/components/CollectionGrid'
 import StorySection from '@/components/StorySection'
 import ProductCard from '@/components/ProductCard'
 import SkeletonCard from '@/components/SkeletonCard'
-import InstagramCollage from '@/components/InstagramCollage'
 import Newsletter from '@/components/Newsletter'
 import Footer from '@/components/Footer'
-import { useScrollReveal } from '@/hooks/useScrollReveal'
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Product = any
 
 const CATEGORIES = [
-  { value: 'tout', label: 'Tout' },
-  { value: 'bagues', label: 'Bagues' },
-  { value: 'colliers', label: 'Colliers' },
-  { value: 'bracelets', label: 'Bracelets' },
-  { value: 'boucles', label: 'Boucles' },
-  { value: 'traditionnel', label: 'Traditionnel' },
-  { value: 'pendentifs', label: 'Pendentifs' },
-  { value: 'ensembles', label: 'Ensembles' },
+  { value: 'tout', label: 'Tout voir' }, { value: 'bagues', label: 'Bagues' },
+  { value: 'colliers', label: 'Colliers' }, { value: 'bracelets', label: 'Bracelets' },
+  { value: 'boucles', label: 'Boucles' }, { value: 'pendentifs', label: 'Pendentifs' },
 ]
 
 export default function HomePage() {
-  const [allProducts, setAllProducts] = useState<Product[]>([])
-  const [mostLiked, setMostLiked] = useState<Product[]>([])
+  const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [activeCategory, setActiveCategory] = useState('tout')
 
   useEffect(() => {
-    async function fetchProducts() {
+    async function loadProducts() {
       const supabase = createClient()
-      const { data: allData } = await supabase.from('products').select('*').order('created_at', { ascending: false })
-      const { data: likedData } = await supabase.from('products').select('*').order('favorites_count', { ascending: false }).limit(8)
-      if (allData) setAllProducts(allData)
-      if (likedData) setMostLiked(likedData)
+      const { data } = await supabase.from('products').select('*').order('created_at', { ascending: false })
+      if (data) setProducts(data)
       setLoading(false)
     }
-
-    fetchProducts()
+    loadProducts()
   }, [])
 
-  const filtered = activeCategory === 'tout'
-    ? allProducts
-    : allProducts.filter(p => p.category?.toLowerCase() === activeCategory)
-
-  const newest = allProducts.slice(0, 8)
-  const trending = allProducts.filter(p => p.is_trending).slice(0, 6)
+  const filtered = activeCategory === 'tout' ? products : products.filter(product => product.category === activeCategory)
+  const favorites = [...products].sort((a, b) => (b.favorites_count ?? 0) - (a.favorites_count ?? 0)).slice(0, 4)
 
   return (
-    <div className="min-h-screen bg-[#fdf0f3]" style={{ fontFamily: "'Inter', sans-serif" }}>
-
-      {/* 1. Hero */}
+    <div className="min-h-screen bg-[#faf6f1] text-[#21171d]">
       <HeroCarousel />
+      <section className="border-b border-[#21171d]/10">
+        <div className="max-w-[1280px] mx-auto px-5 md:px-12 py-7 flex gap-7 md:gap-12 overflow-x-auto hide-scrollbar">
+          {CATEGORIES.map(category => (
+            <button key={category.value} onClick={() => setActiveCategory(category.value)} className={`shrink-0 text-[10px] tracking-[0.18em] uppercase pb-1 border-b transition-colors ${activeCategory === category.value ? 'border-[#21171d] text-[#21171d]' : 'border-transparent text-[#21171d]/45 hover:text-[#21171d]'}`}>
+              {category.label}
+            </button>
+          ))}
+        </div>
+      </section>
 
-      {/* 2. Category Strip — Zag-inspired horizontal filter */}
-      <CategoryStrip active={activeCategory} onSelect={setActiveCategory} />
+      <section className="max-w-[1280px] mx-auto px-5 md:px-12 py-16 md:py-24">
+        <div className="flex items-end justify-between gap-6 mb-10 md:mb-14">
+          <div><p className="text-[10px] tracking-[0.24em] uppercase text-[#a15f70] mb-3">La sélection</p><h2 className="font-cormorant text-4xl md:text-6xl font-light leading-none">{activeCategory === 'tout' ? 'Des pièces à vivre' : CATEGORIES.find(item => item.value === activeCategory)?.label}</h2></div>
+          <Link href="/catalogue" className="hidden sm:flex items-center gap-2 text-[10px] tracking-[0.16em] uppercase border-b border-[#21171d]/30 pb-1">Tout découvrir <ArrowUpRight size={13} /></Link>
+        </div>
+        {loading ? (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-3 gap-y-8 md:gap-6">{[...Array(8)].map((_, index) => <SkeletonCard key={index} />)}</div>
+        ) : filtered.length > 0 ? (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-3 gap-y-9 md:gap-6">{filtered.slice(0, 8).map((product, index) => <ProductCard key={product.id} product={product} index={index} />)}</div>
+        ) : <p className="py-16 text-center font-cormorant text-2xl text-[#21171d]/50">Cette sélection arrive bientôt.</p>}
+      </section>
 
-      {/* 3. Products — visible right after hero + category strip */}
-      <ProductsSection products={filtered} loading={loading} activeCategory={activeCategory} />
+      <section className="grid md:grid-cols-2 min-h-[680px] md:min-h-[720px] bg-[#34272a] text-white">
+        <div className="relative min-h-[440px] md:min-h-full overflow-hidden"><div className="absolute inset-0 bg-[url('/pink.jpg')] bg-cover bg-center transition-transform duration-[1800ms] hover:scale-[1.025]" /><div className="absolute inset-0 bg-gradient-to-t from-[#4b1f2e]/45 via-transparent to-transparent" /><span className="absolute left-6 bottom-6 text-[9px] tracking-[0.24em] uppercase text-white/65">LILOOK · En ce moment</span></div>
+        <div className="px-7 py-16 md:px-16 lg:px-24 flex flex-col justify-center">
+          <p className="text-[10px] tracking-[0.28em] uppercase text-[#e5b7c3] mb-6">Les tendances</p>
+          <h2 className="font-cormorant text-5xl md:text-7xl font-light leading-[0.92]">A feminine touch,<br /><em className="text-[#e5b7c3]">revealed in every detail.</em></h2>
+          <p className="mt-8 max-w-md text-[13px] md:text-[14px] leading-7 text-white/65">Des bijoux délicats, lumineux et faciles à associer — les pièces que l’on choisit le matin et que l’on ne quitte plus.</p>
+          <Link href="/catalogue?filter=trending" className="mt-10 self-start inline-flex items-center gap-3 text-[10px] tracking-[0.2em] uppercase border-b border-white/40 pb-2 hover:border-white transition-colors">Voir les pièces tendance <ArrowUpRight size={14} /></Link>
+        </div>
+      </section>
 
-      {/* 4. Most liked / popular */}
-      {mostLiked.length > 0 && <MostLikedSection products={mostLiked} />}
-
-      {/* 5. Trending */}
-      {trending.length > 0 && <TrendingSection products={trending} />}
-
-      {/* 6. Nouveautés */}
-      {newest.length > 0 && <NewestSection products={newest} />}
-
-      {/* 7. Collections grid */}
+      {favorites.length > 0 && <section className="max-w-[1280px] mx-auto px-5 md:px-12 py-16 md:py-24"><div className="md:grid md:grid-cols-4 gap-6 items-end mb-12"><p className="text-[10px] tracking-[0.24em] uppercase text-[#a15f70] mb-3 md:mb-0">Vos favoris</p><h2 className="font-cormorant text-4xl md:text-6xl font-light md:col-span-3">Celles que vous aimez déjà.</h2></div><div className="grid grid-cols-2 md:grid-cols-4 gap-x-3 gap-y-9 md:gap-6">{favorites.map((product, index) => <ProductCard key={product.id} product={product} index={index} />)}</div></section>}
       <CollectionGrid />
-
-      {/* 8. Brand story */}
       <StorySection />
-
-      {/* 9. Instagram / Newsletter / Map / Footer */}
-      <InstagramCollage />
       <Newsletter />
-      <MapSection />
       <Footer />
     </div>
-  )
-}
-
-function CategoryStrip({ active, onSelect }: { active: string; onSelect: (v: string) => void }) {
-  return (
-    <div className="sticky top-[76px] z-40 bg-[#fdf0f3]/90 backdrop-blur-md border-b border-[#f0c4d0]/30 shadow-sm">
-      <div className="flex gap-2 px-4 py-3 overflow-x-auto hide-scrollbar">
-        {CATEGORIES.map(cat => (
-          <button
-            key={cat.value}
-            onClick={() => onSelect(cat.value)}
-            className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-[11px] font-inter tracking-[1px] transition-all duration-300 ${active === cat.value
-              ? 'bg-[#1e1424] text-white shadow-md'
-              : 'bg-white border border-[#f0c4d0]/50 text-[#4a3550] hover:border-[#d4849a] hover:text-[#d4849a]'
-              }`}
-          >
-            <span>{cat.label}</span>
-          </button>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function ProductsSection({ products, loading, activeCategory }: { products: Product[]; loading: boolean; activeCategory: string }) {
-  const { ref, isVisible } = useScrollReveal()
-  return (
-    <section className="px-4 pt-8 pb-16 max-w-[1200px] mx-auto">
-      <div ref={ref} className={`mb-6 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-        <span className="text-[9px] tracking-[3px] text-[#d4849a] uppercase block mb-1">catalogue</span>
-        <h2 className="font-cormorant text-[2.4rem] font-light leading-none text-[#1e1424]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-          {activeCategory === 'tout' ? 'Toutes les Pièces' : CATEGORIES.find(c => c.value === activeCategory)?.label ?? 'Pièces'}
-        </h2>
-      </div>
-
-      {loading ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {[...Array(8)].map((_, i) => <SkeletonCard key={i} />)}
-        </div>
-      ) : products.length === 0 ? (
-        <div className="text-center py-20">
-          <p className="font-cormorant text-2xl text-[#d4849a]">Aucune pièce dans cette catégorie</p>
-          <p className="text-[12px] text-[#9b6b7f] mt-2">De nouvelles pièces arrivent bientôt...</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
-          {products.map((product: Product, i: number) => (
-            <ProductCard key={product.id} product={product} index={i} />
-          ))}
-        </div>
-      )}
-    </section>
-  )
-}
-
-function MostLikedSection({ products }: { products: Product[] }) {
-  const { ref, isVisible } = useScrollReveal()
-  return (
-    <section className="py-16 bg-gradient-to-r from-[#f5e4ea] to-[#fdf0f3] border-y border-[#f0c4d0]/30 mb-12">
-      <div className="max-w-[1200px] mx-auto px-4">
-        <div ref={ref} className={`mb-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-          <span className="text-[9px] tracking-[3px] text-[#d4849a] uppercase block mb-2">Coup de cœur</span>
-          <h2 className="font-cormorant text-[2.6rem] font-light leading-none text-[#1e1424]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            Les Plus Aimés
-          </h2>
-        </div>
-        <div className="flex md:grid md:grid-cols-4 gap-4 overflow-x-auto md:overflow-visible pb-4 md:pb-0 hide-scrollbar">
-          {products.slice(0, 4).map((p: Product, i: number) => (
-            <div key={p.id} className="flex-shrink-0 w-[230px] md:w-auto">
-              <ProductCard product={p} index={i} />
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-function TrendingSection({ products }: { products: Product[] }) {
-  const { ref, isVisible } = useScrollReveal()
-  return (
-    <section className="px-4 py-14 max-w-[1200px] mx-auto">
-      <div ref={ref} className={`mb-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-        <span className="text-[9px] tracking-[3px] text-[#d4849a] uppercase block mb-2">Tendances</span>
-        <h2 className="font-cormorant text-[2.6rem] font-light leading-none text-[#1e1424]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-          Pièces du Moment
-        </h2>
-      </div>
-      <div className="flex md:grid md:grid-cols-4 gap-4 overflow-x-auto md:overflow-visible pb-4 md:pb-0 hide-scrollbar">
-        {products.slice(0, 4).map((p: Product, i: number) => (
-          <div key={p.id} className="flex-shrink-0 w-[230px] md:w-auto">
-            <ProductCard product={p} index={i} />
-          </div>
-        ))}
-      </div>
-    </section>
-  )
-}
-
-function NewestSection({ products }: { products: Product[] }) {
-  const { ref, isVisible } = useScrollReveal()
-  return (
-    <section className="px-4 py-14 bg-[#fff8fa] border-y border-[#f0c4d0]/20">
-      <div className="max-w-[1200px] mx-auto">
-        <div ref={ref} className={`mb-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-          <span className="text-[9px] tracking-[3px] text-[#d4849a] uppercase block mb-2">Nouveautés</span>
-          <h2 className="font-cormorant text-[2.6rem] font-light leading-none text-[#1e1424]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            Dernières Arrivées
-          </h2>
-        </div>
-        <div className="flex md:grid md:grid-cols-4 gap-4 overflow-x-auto md:overflow-visible pb-4 md:pb-0 hide-scrollbar">
-          {products.slice(0, 4).map((p: Product, i: number) => (
-            <div key={p.id} className="flex-shrink-0 w-[230px] md:w-auto">
-              <ProductCard product={p} index={i} />
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-function MapSection() {
-  const { ref, isVisible } = useScrollReveal()
-  const WHATSAPP_NUMBER = '+212 600-000000'
-  const STORE_ADDRESS = 'Stand Lilook Bijoux - Socco Alto Mall, en face de Paul, Tanger, Maroc'
-  const MAP_EMBED_URL = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d672.2174342424049!2d-5.841404687897888!3d35.78130684818321!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd0c789bd618661d%3A0x87aff69d2a2c175f!2sSocco%20Alto!5e1!3m2!1sen!2sma!4v1783385505442!5m2!1sen!2sma'
-
-  return (
-    <section className="px-4 pb-10 max-w-[1200px] mx-auto">
-      <div ref={ref} className={`mb-6 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-        <span className="text-[9px] tracking-[3px] text-[#d4849a] uppercase block mb-2">Notre boutique</span>
-        <h2 className="font-cormorant text-[2.2rem] font-light leading-none text-[#1e1424]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-          Venez nous rendre visite
-        </h2>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-stretch">
-        <div className="bg-[#fff8fa] rounded-[24px] p-6 border border-[#f0c4d0]/30 shadow-sm flex flex-col justify-between md:col-span-5">
-          <div className="flex items-start gap-4 mb-6">
-            <div className="w-10 h-10 rounded-full bg-[#f5e4ea] flex items-center justify-center flex-shrink-0 text-xs text-[#d4849a]">
-              <span>📍</span>
-            </div>
-            <div>
-              <p className="text-[14px] font-medium text-[#1e1424] mb-1">LILOOK Boutique</p>
-              <p className="text-[13px] text-[#9b6b7f]">{STORE_ADDRESS}</p>
-            </div>
-          </div>
-          <a
-            href={`https://wa.me/${WHATSAPP_NUMBER}?text=Bonjour LILOOK ! Je suis intéressé par vos produits et je voudrais savoir plus d'informations.`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#1e1424] text-white rounded-full text-[11px] tracking-[1.5px] font-medium hover:bg-[#d4849a] transition-colors duration-300"
-          >
-            contactez-nous
-          </a>
-        </div>
-        <div className="rounded-[24px] overflow-hidden shadow-sm border border-[#f0c4d0]/20 md:col-span-7">
-          <iframe src={MAP_EMBED_URL} width="100%" height="220" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="Localisation LILOOK" className="w-full h-full min-h-[220px]" />
-        </div>
-      </div>
-    </section>
   )
 }
