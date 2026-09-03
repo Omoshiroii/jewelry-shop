@@ -46,7 +46,9 @@ export default function CheckoutPage() {
 
     try {
       const supabase = createClient()
+      const orderId = crypto.randomUUID()
       const orderPayload = {
+        id: orderId,
         customer_name: `${firstName} ${lastName}`,
         customer_phone: phone,
         customer_address: address,
@@ -67,16 +69,13 @@ export default function CheckoutPage() {
         status: 'pending'
       }
 
-      const { data, error: insertError } = await supabase
+      const { error: insertError } = await supabase
         .from('orders')
         .insert(orderPayload)
-        .select('id')
-        .single()
 
       if (insertError) throw insertError
 
       // Build WhatsApp message with shareable link
-      const orderId = data.id
       const orderRef = orderId.substring(0, 8).toUpperCase()
       const orderLink = `${SITE_URL}/commande/${orderId}`
       const articleList = cart
@@ -320,7 +319,7 @@ export default function CheckoutPage() {
               <div>
                 <p className="text-[11px] text-[#2f2723] font-medium mb-0.5">Paiement à la livraison</p>
                 <p className="text-[10px] text-[#8e7f74] leading-relaxed">
-                  Livraison gratuite partout au Maroc. Vous payez uniquement à la réception de votre colis.
+                  Livraison fiable partout au Maroc. Vous payez uniquement à la réception de votre colis.
                 </p>
               </div>
             </div>
@@ -414,7 +413,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-[11px] text-[#8e7f74]">Livraison</span>
-                  <span className="text-[11px] text-green-600 font-medium">Gratuite</span>
+                  <span className="text-[11px] text-green-600 font-medium">fiable</span>
                 </div>
                 <div className="border-t border-[#f0ebe5] pt-3 flex justify-between items-center">
                   <span className="text-[12px] text-[#2f2723] font-semibold uppercase tracking-[1px]">Total</span>
@@ -427,7 +426,7 @@ export default function CheckoutPage() {
             <div className="hidden lg:grid grid-cols-2 gap-3 mt-4">
               {[
                 { icon: '🔒', text: 'Paiement sécurisé' },
-                { icon: '🚚', text: 'Livraison gratuite' },
+                { icon: '🚚', text: 'Livraison fiable' },
                 { icon: '📞', text: 'Support WhatsApp' },
                 { icon: '✨', text: 'Qualité garantie' },
               ].map(badge => (

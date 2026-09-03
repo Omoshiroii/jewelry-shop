@@ -105,9 +105,12 @@ ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Allow public inserts" ON public.orders;
 DROP POLICY IF EXISTS "Allow select for everyone" ON public.orders;
 DROP POLICY IF EXISTS "Allow all for service role" ON public.orders;
-CREATE POLICY "Allow public inserts" ON public.orders FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow select for everyone" ON public.orders FOR SELECT USING (true);
-CREATE POLICY "Allow update for service role" ON public.orders FOR UPDATE USING (true);
+DROP POLICY IF EXISTS "Allow update for service role" ON public.orders;
+DROP POLICY IF EXISTS "Allow public order submissions" ON public.orders;
+DROP POLICY IF EXISTS "Admins can read orders" ON public.orders;
+DROP POLICY IF EXISTS "Admins can update orders" ON public.orders;
+CREATE POLICY "Allow public order submissions" ON public.orders
+  FOR INSERT TO anon, authenticated WITH CHECK (status = 'pending');
 
 -- 2. CREATE PAGE VIEWS TABLE
 CREATE TABLE IF NOT EXISTS public.page_views (
@@ -121,8 +124,10 @@ CREATE TABLE IF NOT EXISTS public.page_views (
 ALTER TABLE public.page_views ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Allow public inserts" ON public.page_views;
 DROP POLICY IF EXISTS "Allow select for everyone" ON public.page_views;
-CREATE POLICY "Allow public inserts" ON public.page_views FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow select for everyone" ON public.page_views FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Admins can read page views" ON public.page_views;
+DROP POLICY IF EXISTS "Allow public analytics inserts" ON public.page_views;
+CREATE POLICY "Allow public analytics inserts" ON public.page_views
+  FOR INSERT TO anon, authenticated WITH CHECK (true);
 
 -- 3. CREATE CATEGORIES TABLE
 CREATE TABLE IF NOT EXISTS public.categories (
@@ -139,8 +144,10 @@ CREATE TABLE IF NOT EXISTS public.categories (
 ALTER TABLE public.categories ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Allow select for everyone" ON public.categories;
 DROP POLICY IF EXISTS "Allow all for authenticated" ON public.categories;
-CREATE POLICY "Allow select for everyone" ON public.categories FOR SELECT USING (true);
-CREATE POLICY "Allow all for authenticated" ON public.categories FOR ALL USING (true);
+DROP POLICY IF EXISTS "Admins can manage categories" ON public.categories;
+DROP POLICY IF EXISTS "Allow public category reads" ON public.categories;
+CREATE POLICY "Allow public category reads" ON public.categories
+  FOR SELECT TO anon, authenticated USING (is_active = true);
 
 INSERT INTO public.categories (name, slug, display_order) VALUES
   ('Bagues', 'bagues', 1),
@@ -151,6 +158,41 @@ INSERT INTO public.categories (name, slug, display_order) VALUES
   ('Pendentifs', 'pendentifs', 6),
   ('Ensembles', 'ensembles', 7)
 ON CONFLICT (slug) DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS public.admin_users (
+  user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+ALTER TABLE public.admin_users ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON public.admin_users FROM anon, authenticated;
+INSERT INTO public.admin_users (user_id)
+SELECT id FROM auth.users ORDER BY created_at ASC LIMIT 1
+ON CONFLICT (user_id) DO NOTHING;
+
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path = '' AS $$
+  SELECT EXISTS (SELECT 1 FROM public.admin_users WHERE user_id = auth.uid());
+$$;
+REVOKE ALL ON FUNCTION public.is_admin() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.is_admin() TO authenticated;
+
+CREATE POLICY "Admins can read orders" ON public.orders
+  FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Admins can update orders" ON public.orders
+  FOR UPDATE TO authenticated USING ((SELECT public.is_admin()))
+  WITH CHECK ((SELECT public.is_admin()));
+CREATE POLICY "Admins can read page views" ON public.page_views
+  FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Admins can manage categories" ON public.categories
+  FOR ALL TO authenticated USING ((SELECT public.is_admin()))
+  WITH CHECK ((SELECT public.is_admin()));
+
+CREATE OR REPLACE FUNCTION public.get_public_order(order_id UUID)
+RETURNS SETOF public.orders LANGUAGE sql STABLE SECURITY DEFINER SET search_path = '' AS $$
+  SELECT * FROM public.orders WHERE id = order_id LIMIT 1;
+$$;
+REVOKE ALL ON FUNCTION public.get_public_order(UUID) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.get_public_order(UUID) TO anon, authenticated;
 
 ALTER TABLE public.products ADD COLUMN IF NOT EXISTS favorites_count INTEGER DEFAULT 0;
 
@@ -170,7 +212,10 @@ BEGIN
   SET favorites_count = GREATEST(0, COALESCE(favorites_count, 0) - 1)
   WHERE id = product_id;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;`
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+REVOKE ALL ON FUNCTION public.increment_favorite(UUID) FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON FUNCTION public.decrement_favorite(UUID) FROM PUBLIC, anon, authenticated;`
 
 export default function DashboardPage() {
   const [products, setProducts] = useState<Product[]>([])

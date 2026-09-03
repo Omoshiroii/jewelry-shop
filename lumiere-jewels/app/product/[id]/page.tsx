@@ -209,7 +209,7 @@ export default function ProductPage() {
               {[
                 { icon: ShieldCheck, text: 'Acier 316L' },
                 { icon: Sparkles, text: 'Doré 18k' },
-                { icon: Truck, text: 'Livraison gratuite' }
+                { icon: Truck, text: 'Livraison fiable' }
               ].map((benefit, i) => (
                 <div key={i} className="flex items-center gap-1.5 bg-[#fff8fa]/60 border border-[#f0c4d0]/20 rounded-xl px-2.5 py-2">
                   <benefit.icon size={12} className="text-[#d4849a] flex-shrink-0" />
@@ -289,7 +289,7 @@ export default function ProductPage() {
                 </button>
                 <div className={`transition-all duration-300 overflow-hidden ${openSection === 'shipping' ? 'max-h-60 mt-3 opacity-100' : 'max-h-0 opacity-0'}`}>
                   <ul className="text-[12px] text-[#9b6b7f] space-y-1.5 list-disc pl-4 leading-relaxed">
-                    <li><strong>Livraison gratuite</strong> partout au Maroc sous 24h à 72h</li>
+                    <li><strong>Livraison fiable</strong> partout au Maroc sous 24h à 72h</li>
                     <li>Paiement en espèces sécurisé à la livraison</li>
                     <li>Retours possibles sous 7 jours si le modèle ne vous plaît pas</li>
                   </ul>

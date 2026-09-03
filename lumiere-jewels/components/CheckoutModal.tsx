@@ -89,7 +89,9 @@ export default function CheckoutModal({ isOpen, onClose }: Props) {
 
     try {
       const supabase = createClient()
+      const orderId = crypto.randomUUID()
       const orderPayload = {
+        id: orderId,
         customer_name: `${firstName} ${lastName}`,
         customer_phone: `${countryCode} ${phone}`,
         customer_address: address,
@@ -108,11 +110,9 @@ export default function CheckoutModal({ isOpen, onClose }: Props) {
         status: 'pending'
       }
 
-      const { data, error: insertError } = await supabase
+      const { error: insertError } = await supabase
         .from('orders')
         .insert(orderPayload)
-        .select('id')
-        .single()
 
       if (insertError) {
         throw insertError
@@ -120,7 +120,7 @@ export default function CheckoutModal({ isOpen, onClose }: Props) {
 
       clearCart()
       onClose()
-      router.push(`/commande-confirmee?id=${data.id}`)
+      router.push(`/commande-confirmee?id=${orderId}`)
     } catch (err: any) {
       console.error('Checkout error:', err)
       setError('Une erreur est survenue lors de la validation. Veuillez réessayer.')

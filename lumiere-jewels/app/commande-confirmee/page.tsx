@@ -44,13 +44,12 @@ function OrderConfirmationContent() {
       try {
         const supabase = createClient()
         const { data, error } = await supabase
-          .from('orders')
-          .select('*')
-          .eq('id', orderId)
+          .rpc('get_public_order', { order_id: orderId })
           .single()
 
+        if (error) throw error
         if (data) {
-          setOrder(data)
+          setOrder(data as Order)
         }
       } catch (err) {
         console.error('Error fetching order details:', err)

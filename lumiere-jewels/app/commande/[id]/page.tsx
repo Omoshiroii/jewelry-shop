@@ -47,12 +47,12 @@ export default function OrderDetailPage() {
     async function fetchOrder() {
       try {
         const supabase = createClient()
-        const { data } = await supabase
-          .from('orders')
-          .select('*')
-          .eq('id', id)
+        const orderId = Array.isArray(id) ? id[0] : id
+        const { data, error } = await supabase
+          .rpc('get_public_order', { order_id: orderId })
           .single()
-        if (data) setOrder(data)
+        if (error) throw error
+        if (data) setOrder(data as Order)
       } catch (err) {
         console.error('Error fetching order:', err)
       } finally {

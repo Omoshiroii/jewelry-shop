@@ -36,7 +36,7 @@ export default function AnnouncementBar() {
                 <span>•</span>
                 <span>Waterproof &amp; anti-ternissement</span>
                 <span>•</span>
-                <span>Livraison gratuite au Maroc</span>
+                <span>Livraison fiable au Maroc</span>
                 <span>•</span>
                 <span>Paiement à la livraison</span>
               </span>

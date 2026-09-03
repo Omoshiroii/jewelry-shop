@@ -52,7 +52,7 @@ export default function Footer() {
             </div>
             <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 group">
               <Phone size={16} strokeWidth={1.5} className="text-[#d4849a] flex-shrink-0" />
-              <span className="text-[13px] text-[#9b6b7f] group-hover:text-white transition-colors">+212 694443182</span>
+              <span className="text-[13px] text-[#9b6b7f] group-hover:text-white transition-colors">+212 66666666666</span>
             </a>
             <div className="flex items-center gap-3">
               <Mail size={16} strokeWidth={1.5} className="text-[#d4849a] flex-shrink-0" />
