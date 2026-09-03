@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import Navbar from '@/components/Navbar'
 import BottomNav from '@/components/BottomNav'
-import SplashScreen from '@/components/SplashScreen'
 import AnalyticsTracker from '@/components/AnalyticsTracker'
 import WhatsAppButton from '@/components/WhatsAppButton'
 
@@ -30,7 +29,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr">
       <body className="bg-[#f7f2ec] antialiased">
-        <SplashScreen />
         <AnalyticsTracker />
         <Navbar />
         <main>{children}</main>
